@@ -12,6 +12,7 @@ import OxygenMeter from './components/OxygenMeter'
 import EcosystemActivity from './components/EcosystemActivity'
 import SummaryCards from './components/SummaryCards'
 import BadgesSummary from './components/BadgesSummary'
+import MyPlantCard from './components/MyPlantCard'
 import Footer from './components/Footer'
 
 export default function Home() {
@@ -115,6 +116,10 @@ export default function Home() {
         <HeroSection language={language} />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 md:space-y-12 pb-8 md:pb-12">
+          {/* My Plant Card - Near Hero Section */}
+          <section>
+            <MyPlantCard />
+          </section>
 
           {/* Control Panel */}
           <section id="simulation" className="scroll-mt-24">

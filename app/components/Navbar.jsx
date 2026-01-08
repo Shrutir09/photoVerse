@@ -56,7 +56,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${
         scrolled
           ? 'glass border-b border-green-500/20 shadow-lg backdrop-blur-xl bg-green-800/90 dark:bg-chalkboard-navbar-footer dark:border-chalk-border'
           : 'glass backdrop-blur-xl bg-green-800/80 dark:bg-chalkboard-navbar-footer dark:border-chalk-border/10 border-b border-green-500/10'
@@ -65,33 +65,23 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Left Zone - Logo (Mobile & Desktop) */}
-          <Link href="/" className="flex items-center gap-2 md:gap-3 group flex-shrink-0">
+      {/* 3-Section Flex Layout: LEFT | CENTER | RIGHT */}
+      <div className="flex items-center h-16 md:h-20 w-full">
+        {/* LEFT SECTION - Logo flush left with 16px padding */}
+        <div className="flex items-center pl-4 flex-shrink-0">
+          <Link href="/" className="flex items-center gap-2 md:gap-3 group">
             <Logo size="md" />
             <span className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent group-hover:from-green-500 group-hover:to-emerald-400 transition-all">
               <span className="hidden sm:inline">PHOTOSPHERE</span>
               <span className="sm:hidden">PHOTO</span>
             </span>
           </Link>
+        </div>
 
-          {/* Center Zone - Dark/Light & Language Toggle (Mobile Only) */}
-          <div className="flex md:hidden items-center gap-3">
-            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
-            <motion.button
-              onClick={onDarkModeToggle}
-              className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {darkMode ? '☀️' : '🌙'}
-            </motion.button>
-          </div>
-
-          {/* Center Zone - Navigation Links (Desktop Only) */}
-          <div className="hidden md:flex items-center gap-1 absolute left-1/2 transform -translate-x-1/2">
+        {/* CENTER SECTION - Navigation links perfectly centered */}
+        <div className="flex-1 flex items-center justify-center">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -119,25 +109,26 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
               </Link>
             ))}
           </div>
+        </div>
 
-          {/* Right Zone - Controls (Desktop) & Hamburger (Mobile) */}
-          <div className="flex items-center gap-4 flex-shrink-0">
-            {/* Desktop: Language, Dark Mode, Profile */}
-            <div className="hidden md:flex items-center gap-4">
-              <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
-              
-              <motion.button
-                onClick={onDarkModeToggle}
-                className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
-                whileHover={{ scale: 1.1, rotate: 180 }}
-                whileTap={{ scale: 0.9 }}
-                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              >
-                {darkMode ? '☀️' : '🌙'}
-              </motion.button>
+        {/* RIGHT SECTION - Profile, theme toggle, username flush right with 16px padding */}
+        <div className="flex items-center pr-4 flex-shrink-0 gap-4">
+          {/* Desktop: Language, Dark Mode, Profile */}
+          <div className="hidden md:flex items-center gap-4">
+            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+            
+            <motion.button
+              onClick={onDarkModeToggle}
+              className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
+              whileHover={{ scale: 1.1, rotate: 180 }}
+              whileTap={{ scale: 0.9 }}
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {darkMode ? '☀️' : '🌙'}
+            </motion.button>
 
-              {/* Profile */}
-              {user ? (
+            {/* Profile */}
+            {user ? (
                 <div className="relative profile-menu">
                   <motion.button
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -264,34 +255,45 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                   )}
                 </AnimatePresence>
               </div>
-              ) : (
-                <Link
-                  href="/login"
-                  className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg shadow-green-500/30 text-sm"
-                >
-                  Login
-                </Link>
-              )}
-            </div>
-
-              {/* Mobile: Hamburger Menu Button */}
-              <motion.button
-                onClick={() => setShowMobileMenu(!showMobileMenu)}
-                className="md:hidden glass rounded-lg p-2 hover:bg-green-500/10 transition-colors mobile-menu"
-                whileTap={{ scale: 0.9 }}
-                aria-label="Toggle menu"
+            ) : (
+              <Link
+                href="/login"
+                className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg shadow-green-500/30 text-sm"
               >
-                <motion.div
-                  animate={{ rotate: showMobileMenu ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-2xl"
-                >
-                  {showMobileMenu ? '✕' : '☰'}
-                </motion.div>
-              </motion.button>
-            </div>
+                Login
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile: Language, Dark Mode Toggle, Hamburger */}
+          <div className="flex md:hidden items-center gap-3">
+            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+            <motion.button
+              onClick={onDarkModeToggle}
+              className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {darkMode ? '☀️' : '🌙'}
+            </motion.button>
+            <motion.button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              className="glass rounded-lg p-2 hover:bg-green-500/10 transition-colors mobile-menu"
+              whileTap={{ scale: 0.9 }}
+              aria-label="Toggle menu"
+            >
+              <motion.div
+                animate={{ rotate: showMobileMenu ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-2xl"
+              >
+                {showMobileMenu ? '✕' : '☰'}
+              </motion.div>
+            </motion.button>
           </div>
         </div>
+      </div>
 
         {/* Mobile Menu Dropdown */}
         <AnimatePresence>
@@ -301,9 +303,9 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="md:hidden overflow-hidden border-t border-green-500/20 mobile-menu"
+              className="md:hidden overflow-hidden border-t border-green-500/20 mobile-menu w-full"
             >
-              <div className="px-4 py-4 space-y-2">
+              <div className="px-4 py-4 space-y-2 w-full">
                 {/* Navigation Links */}
                 {navItems.map((item) => (
                   <Link

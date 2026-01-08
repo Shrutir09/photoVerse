@@ -1,428 +1,367 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 
 export default function HeroSection({ language = 'en' }) {
-  const [co2Bubbles, setCo2Bubbles] = useState([])
-  const [o2Bubbles, setO2Bubbles] = useState([])
+  const [bubbles, setBubbles] = useState([])
+  const textContainerRef = useRef(null)
+  const yourLivingRef = useRef(null)
+  const yourTextRef = useRef(null)
+  const [sunPosition, setSunPosition] = useState({ top: '20%', left: '50%' })
 
-  // Generate CO₂ bubbles
+  // Generate bubbles
   useEffect(() => {
-    const bubbles = Array.from({ length: 4 }, (_, i) => ({
-      id: `co2-${i}`,
-      x: Math.random() * 30 + 10, // Start from left side
-      y: Math.random() * 40 + 30,
-      delay: i * 0.5,
-    }))
-    setCo2Bubbles(bubbles)
+    const bubblePositions = [
+      { x: 20, y: 15, delay: 0 },
+      { x: 35, y: 12, delay: 0.5 },
+      { x: 65, y: 14, delay: 1.5 },
+      { x: 80, y: 16, delay: 2 },
+      { x: 30, y: 25, delay: 0.3 },
+      { x: 70, y: 22, delay: 0.8 },
+    ]
+    setBubbles(bubblePositions)
   }, [])
 
-  // Generate O₂ bubbles
+  // Position sun at top center of hero, ensuring no overlap with text
   useEffect(() => {
-    const bubbles = Array.from({ length: 5 }, (_, i) => ({
-      id: `o2-${i}`,
-      x: 50, // Start from tree center
-      y: 40,
-      delay: i * 0.4,
-    }))
-    setO2Bubbles(bubbles)
+    const updateSunPosition = () => {
+      if (yourLivingRef.current) {
+        const h2Rect = yourLivingRef.current.getBoundingClientRect()
+        const sectionRect = yourLivingRef.current.closest('section')?.getBoundingClientRect()
+        if (sectionRect) {
+          // Sun dimensions - must account for full height including rays
+          const sunCoreSize = window.innerWidth >= 1024 ? 96 : window.innerWidth >= 768 ? 80 : 64
+          const sunCoreRadius = sunCoreSize / 2
+          const sunRaysMaxLength = 140 // Maximum ray length
+          const sunMaxBottomExtension = sunCoreRadius + sunRaysMaxLength
+          
+          // Minimum spacing above text to prevent overlap
+          const minSpacingAboveText = 50
+          
+          // Calculate the top of "Your Living" text relative to section
+          const textTop = h2Rect.top - sectionRect.top
+          
+          // Position sun at top center, but ensure it doesn't overlap text
+          // Calculate maximum allowed top position
+          const maxSunTop = textTop - sunMaxBottomExtension - minSpacingAboveText
+          
+          // Position near top of hero (10% from top) but ensure no text overlap
+          const desiredTop = sectionRect.height * 0.10 // 10% from top
+          const finalTop = Math.min(desiredTop, maxSunTop)
+          
+          setSunPosition({
+            top: `${Math.max(5, (finalTop / sectionRect.height) * 100)}%`,
+            left: '50%', // Exact horizontal center
+          })
+        }
+      }
+    }
+
+    // Initial positioning with multiple attempts to ensure DOM is ready
+    const timeout1 = setTimeout(updateSunPosition, 50)
+    const timeout2 = setTimeout(updateSunPosition, 200)
+    const timeout3 = setTimeout(updateSunPosition, 500)
+    
+    window.addEventListener('resize', updateSunPosition)
+    return () => {
+      clearTimeout(timeout1)
+      clearTimeout(timeout2)
+      clearTimeout(timeout3)
+      window.removeEventListener('resize', updateSunPosition)
+    }
   }, [])
-
-  const translations = {
-    en: {
-      title: 'Your Living Photosynthesis World',
-      tagline: 'Learn • Simulate • Visualize Photosynthesis',
-      description: 'Control sunlight, CO₂ levels, and temperature to watch your plant ecosystem come alive. Discover how environmental factors affect plant growth and oxygen production in real-time.',
-      startSimulation: 'Start Simulation',
-      learnPhotosynthesis: 'Learn Photosynthesis',
-      liveEcosystem: 'Live Ecosystem Simulation',
-    },
-    hi: {
-      title: 'आपकी जीवंत प्रकाश संश्लेषण दुनिया',
-      tagline: 'सीखें • सिमुलेट करें • प्रकाश संश्लेषण देखें',
-      description: 'सूरज की रोशनी, CO₂ स्तर और तापमान को नियंत्रित करें और अपने पौधे के पारिस्थितिकी तंत्र को जीवंत होते देखें। वास्तविक समय में देखें कि पर्यावरणीय कारक पौधे के विकास और ऑक्सीजन उत्पादन को कैसे प्रभावित करते हैं।',
-      startSimulation: 'सिमुलेशन शुरू करें',
-      learnPhotosynthesis: 'प्रकाश संश्लेषण सीखें',
-      liveEcosystem: 'लाइव पारिस्थितिकी तंत्र सिमुलेशन',
-    },
-  }
-
-  const t = translations[language] || translations.en
 
   return (
-    <section className="relative min-h-[600px] md:min-h-[700px] flex items-center pt-16 md:pt-20 pb-16 md:pb-24 overflow-hidden -mt-20 md:-mt-24">
-      {/* Subtle Top Border/Glow Separator */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-green-400/50 to-transparent z-20" />
-      <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-green-400/5 to-transparent z-10" />
-      
-      {/* Light, Bright Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:bg-chalkboard-bg">
-        <motion.div
-          className="absolute inset-0 opacity-40"
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            repeatType: 'reverse',
-          }}
-          style={{
-            backgroundImage: 'radial-gradient(circle at 20% 50%, rgba(34, 197, 94, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%)',
-            backgroundSize: '200% 200%',
-          }}
-        />
-        {/* Very light abstract shapes/glow (5-10% opacity) */}
-        <motion.div
-          className="absolute top-1/4 right-1/4 w-64 h-64 rounded-full bg-gradient-to-br from-emerald-400/8 to-green-400/8 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.05, 0.1, 0.05],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 left-1/4 w-48 h-48 rounded-full bg-gradient-to-br from-cyan-400/8 to-emerald-400/8 blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.05, 0.1, 0.05],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2
-          }}
-        />
-        {/* Very subtle texture */}
-        <div 
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-          }}
-        />
+    <section 
+      className="relative w-full h-screen max-h-[750px] flex items-center justify-center overflow-hidden"
+    >
+      {/* Background - Dark Green for Dark Mode, Light Green for Light Mode */}
+      <div className="absolute inset-0 bg-gradient-to-b from-green-50 via-emerald-50/80 to-white dark:from-[#0d2818] dark:via-[#0f2e24] dark:to-[#0a1f18]">
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-50/20 to-transparent dark:via-transparent" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Side - Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6 md:space-y-8 text-center lg:text-left"
-          >
-            {/* Heading with Glow */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.3] md:leading-[1.25] relative tracking-tight"
-              style={{
-                textShadow: '0 2px 20px rgba(34, 197, 94, 0.3), 0 4px 30px rgba(16, 185, 129, 0.2)',
-                fontSmooth: 'antialiased',
-                WebkitFontSmoothing: 'antialiased',
-              }}
-            >
-              {/* Subtle glow behind heading */}
+      {/* Soft Green Bush-like Glow on Left Side */}
+      <div 
+        className="absolute left-0 top-0 bottom-0 w-1/3 pointer-events-none z-10"
+        style={{
+          background: 'radial-gradient(ellipse at left center, rgba(34, 197, 94, 0.25) 0%, rgba(16, 185, 129, 0.15) 40%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+      <div 
+        className="absolute left-0 top-0 bottom-0 w-1/4 pointer-events-none z-10 dark:hidden"
+        style={{
+          background: 'radial-gradient(ellipse at left center, rgba(134, 239, 172, 0.2) 0%, rgba(74, 222, 128, 0.1) 50%, transparent 80%)',
+          filter: 'blur(50px)',
+        }}
+      />
+
+      {/* Soft Green Bush-like Glow on Right Side */}
+      <div 
+        className="absolute right-0 top-0 bottom-0 w-1/3 pointer-events-none z-10"
+        style={{
+          background: 'radial-gradient(ellipse at right center, rgba(34, 197, 94, 0.25) 0%, rgba(16, 185, 129, 0.15) 40%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+      <div 
+        className="absolute right-0 top-0 bottom-0 w-1/4 pointer-events-none z-10 dark:hidden"
+        style={{
+          background: 'radial-gradient(ellipse at right center, rgba(134, 239, 172, 0.2) 0%, rgba(74, 222, 128, 0.1) 50%, transparent 80%)',
+          filter: 'blur(50px)',
+        }}
+      />
+
+      {/* Sun - Clean, Natural Glowing Sun - Exact Horizontal Center */}
+      <motion.div
+        className="absolute z-20"
+        style={{
+          top: sunPosition.top,
+          left: sunPosition.left,
+          transform: 'translate(-50%, 0)',
+        }}
+        animate={{
+          scale: [1, 1.03, 1],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      >
+        {/* Natural, subtle light rays fading outward in all directions */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {[...Array(32)].map((_, i) => {
+            const angle = i * 11.25 // Even distribution
+            const distance = 60 + Math.random() * 40 // Vary distance for natural look
+            const rayOpacity = 0.15 + Math.random() * 0.15 // Vary opacity
+            
+            return (
               <motion.div
-                className="absolute -inset-4 bg-gradient-to-r from-emerald-400/20 via-green-400/20 to-emerald-400/20 blur-3xl rounded-full"
+                key={`ray-${i}`}
+                className="absolute rounded-full"
+                style={{
+                  width: '3px',
+                  height: `${80 + Math.random() * 60}px`,
+                  background: `linear-gradient(to bottom, 
+                    rgba(255, 235, 59, ${rayOpacity}) 0%, 
+                    rgba(255, 193, 7, ${rayOpacity * 0.7}) 30%, 
+                    rgba(255, 152, 0, ${rayOpacity * 0.4}) 60%, 
+                    transparent 100%)`,
+                  transform: `rotate(${angle}deg) translateY(-${distance}px)`,
+                  transformOrigin: 'bottom center',
+                  filter: 'blur(1.5px)',
+                }}
                 animate={{
-                  opacity: [0.3, 0.5, 0.3],
-                  scale: [1, 1.05, 1],
+                  opacity: [rayOpacity * 0.6, rayOpacity, rayOpacity * 0.6],
                 }}
                 transition={{
-                  duration: 4,
+                  duration: 4 + Math.random() * 2,
                   repeat: Infinity,
+                  delay: Math.random() * 2,
                   ease: "easeInOut"
                 }}
               />
-              <span className="relative z-10 bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-500 dark:from-chalk-emerald dark:via-chalk-emerald dark:to-chalk-white bg-clip-text text-transparent">
-                {language === 'hi' ? t.title.split(' ').slice(0, 3).join(' ') : 'Your Living'}
-              </span>
-              <br />
-              <span className="relative z-10 bg-gradient-to-r from-green-600 via-emerald-600 to-cyan-600 dark:from-chalk-emerald dark:via-chalk-white dark:to-chalk-secondary bg-clip-text text-transparent">
-                {language === 'hi' ? t.title.split(' ').slice(3).join(' ') : 'Photosynthesis World'}
-              </span>
-              <motion.span
-                className="absolute ml-2 text-4xl md:text-5xl relative z-10"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 10, -10, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                🌱
-              </motion.span>
-            </motion.h1>
-
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="text-base md:text-lg text-emerald-600 dark:text-chalk-secondary font-medium max-w-2xl mx-auto lg:mx-0 tracking-wide"
-              style={{
-                fontSmooth: 'antialiased',
-                WebkitFontSmoothing: 'antialiased',
-              }}
-            >
-              {t.tagline}
-            </motion.p>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="flex justify-center"
-            >
-              {/* Primary Button - Start Simulation */}
-              <Link href="#simulation">
-                <motion.button
-                  whileHover={{ 
-                    scale: 1.1, 
-                    y: -5,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 text-white font-semibold rounded-xl shadow-2xl shadow-emerald-500/50 overflow-hidden transition-all duration-300"
-                  style={{
-                    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.3)',
-                  }}
-                >
-                  {/* Soft gradient base */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 via-green-400 to-emerald-500 opacity-90" />
-                  
-                  {/* Pulse animation */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-emerald-300 to-green-300"
-                    animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  />
-                  
-                  {/* Gentle hover glow effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-emerald-200 to-green-200 opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur-sm"
-                  />
-                  
-                  <span className="relative z-10 flex items-center gap-2">
-                    🚀 {t.startSimulation}
-                    <motion.span
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut"
-                      }}
-                    >
-                      →
-                    </motion.span>
-                  </span>
-                </motion.button>
-              </Link>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Side - Visual Scene with Subtle Background Illustration */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative flex justify-center lg:justify-end"
-          >
-            {/* Subtle background illustration (5-10% opacity) */}
-            <div className="absolute inset-0 flex items-center justify-center lg:justify-end opacity-[0.08] pointer-events-none">
-              <motion.div
-                className="relative"
-                animate={{
-                  scale: [1, 1.05, 1],
-                  y: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                <div className="text-9xl md:text-[12rem] opacity-50">🌱</div>
-                <motion.div
-                  className="absolute -top-8 -right-8 text-6xl md:text-7xl opacity-40"
-                  animate={{
-                    rotate: 360,
-                    scale: [1, 1.1, 1],
-                  }}
-                  transition={{
-                    rotate: {
-                      duration: 30,
-                      repeat: Infinity,
-                      ease: "linear"
-                    },
-                    scale: {
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }
-                  }}
-                >
-                  ☀️
-                </motion.div>
-              </motion.div>
-            </div>
-
-            {/* Main Visual Scene - Larger and More Visible */}
-            <motion.div
-              animate={{
-                y: [0, -8, 0],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="relative z-10 scale-110 md:scale-125"
-            >
-              {/* Sun with soft pulse - Larger */}
-              <motion.div
-                className="absolute -top-12 -right-12 z-20"
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              >
-                <motion.div
-                  className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 shadow-xl relative"
-                  animate={{
-                    scale: [1, 1.15, 1],
-                    boxShadow: [
-                      '0 0 25px rgba(251, 191, 36, 0.5)',
-                      '0 0 40px rgba(251, 191, 36, 0.7)',
-                      '0 0 25px rgba(251, 191, 36, 0.5)',
-                    ],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <span className="text-5xl md:text-6xl flex items-center justify-center h-full">☀️</span>
-                </motion.div>
-              </motion.div>
-
-              {/* CO₂ Bubbles moving toward tree */}
-              {co2Bubbles.map((bubble) => (
-                <motion.div
-                  key={bubble.id}
-                  className="absolute z-10"
-                  style={{
-                    left: `${bubble.x}%`,
-                    top: `${bubble.y}%`,
-                  }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{
-                    x: ['0%', '25%'],
-                    y: ['0%', '-5%'],
-                    opacity: [0, 0.7, 0.7, 0],
-                    scale: [0.5, 0.8, 0.8, 0.5],
-                  }}
-                  transition={{
-                    duration: 4,
-                    delay: bubble.delay,
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <div className="text-xs md:text-sm bg-gray-500/70 text-white px-2 py-1 rounded-full backdrop-blur-sm shadow-md">
-                    CO₂
-                  </div>
-                </motion.div>
-              ))}
-
-              {/* Plant with gentle sway - Larger */}
-              <motion.div
-                className="text-8xl md:text-9xl relative z-10"
-                animate={{
-                  rotate: [0, 2, -2, 0],
-                  y: [0, -3, 0],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
-                🌳
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background: 'radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, transparent 70%)',
-                    filter: 'blur(25px)',
-                  }}
-                  animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.4, 0.6, 0.4],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                />
-              </motion.div>
-
-              {/* O₂ Bubbles coming out of tree */}
-              {o2Bubbles.map((bubble) => (
-                <motion.div
-                  key={bubble.id}
-                  className="absolute z-10"
-                  style={{
-                    left: `${bubble.x}%`,
-                    top: `${bubble.y}%`,
-                  }}
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  animate={{
-                    x: ['0%', Math.random() * 40 - 20 + '%'],
-                    y: ['0%', '-30%'],
-                    opacity: [0, 0.8, 0.8, 0],
-                    scale: [0.5, 1, 1, 0.5],
-                  }}
-                  transition={{
-                    duration: 5,
-                    delay: bubble.delay,
-                    repeat: Infinity,
-                    repeatDelay: 1,
-                    ease: "easeOut"
-                  }}
-                >
-                  <div className="text-xs md:text-sm bg-blue-400/70 text-white px-2 py-1 rounded-full backdrop-blur-sm shadow-md">
-                    O₂
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
+            )
+          })}
         </div>
+
+        {/* Gentle halo glow around sun */}
+        <motion.div
+          className="absolute inset-0 rounded-full pointer-events-none"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.4, 0.6, 0.4],
+          }}
+          transition={{
+            duration: 5,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          style={{
+            background: 'radial-gradient(circle, rgba(255, 235, 59, 0.3) 0%, rgba(255, 193, 7, 0.2) 30%, rgba(255, 152, 0, 0.1) 60%, transparent 100%)',
+            filter: 'blur(25px)',
+            width: '180px',
+            height: '180px',
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+        
+        {/* Soft glowing sun core - Clean circle, no decorative shapes */}
+        <div 
+          className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full relative z-10"
+          style={{
+            background: 'radial-gradient(circle, #ffeb3b 0%, #ffc107 50%, #ff9800 100%)',
+            boxShadow: '0 0 40px rgba(255, 235, 59, 0.6), 0 0 80px rgba(255, 193, 7, 0.4), 0 0 120px rgba(255, 152, 0, 0.2)',
+          }}
+        />
+        
+        {/* Light mode: softer, warmer sun */}
+        <div 
+          className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full absolute inset-0 dark:hidden"
+          style={{
+            background: 'radial-gradient(circle, #fff9c4 0%, #fff59d 50%, #ffeb3b 100%)',
+            boxShadow: '0 0 35px rgba(255, 249, 196, 0.5), 0 0 70px rgba(255, 245, 157, 0.3), 0 0 100px rgba(255, 235, 59, 0.2)',
+          }}
+        />
+      </motion.div>
+
+      {/* Bubbles - Scattered around (avoiding sun area) */}
+      {bubbles.map((bubble, i) => (
+        <motion.div
+          key={`bubble-${i}`}
+          className="absolute z-20"
+          style={{
+            left: `${bubble.x}%`,
+            top: `${bubble.y}%`,
+          }}
+          initial={{ opacity: 0.6, scale: 0.8 }}
+          animate={{
+            y: ['0px', '-20px', '0px'],
+            opacity: [0.6, 0.8, 0.6],
+            scale: [0.8, 1, 0.8],
+          }}
+          transition={{
+            duration: 5,
+            delay: bubble.delay,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <div 
+            className="w-2 h-2 md:w-3 md:h-3 rounded-full"
+            style={{
+              background: 'rgba(255, 255, 255, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.5)',
+              backdropFilter: 'blur(2px)',
+            }}
+          />
+        </motion.div>
+      ))}
+
+      {/* Main Content - Perfectly Centered, Minimal Top Padding */}
+      <div 
+        ref={textContainerRef}
+        className="relative z-30 w-full max-w-5xl mx-auto px-4 sm:px-6 text-center flex flex-col items-center justify-center pt-8 md:pt-12"
+      >
+        {/* "Your Living" - Above Main Title */}
+        <motion.h2
+          ref={yourLivingRef}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-2 md:mb-3"
+          style={{
+            color: '#166534',
+            letterSpacing: '-0.01em',
+          }}
+        >
+          <span ref={yourTextRef} className="inline-block">
+            {/* Light mode: dark green text */}
+            <span className="dark:hidden">Your</span>
+            {/* Dark mode: neon green with glow */}
+            <span className="hidden dark:inline-block" style={{
+              color: '#4ade80',
+              textShadow: '0 0 15px rgba(74, 222, 128, 0.4)',
+            }}>Your</span>
+          </span>
+          {' '}
+          {/* Light mode: dark green text */}
+          <span className="dark:hidden">Living</span>
+          {/* Dark mode: neon green with glow */}
+          <span className="hidden dark:inline-block" style={{
+            color: '#4ade80',
+            textShadow: '0 0 15px rgba(74, 222, 128, 0.4)',
+          }}>Living</span>
+        </motion.h2>
+
+        {/* Main Title - "Photosynthesis World" */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-5 md:mb-7"
+          style={{
+            color: '#166534',
+            letterSpacing: '-0.02em',
+            lineHeight: '1.1',
+          }}
+        >
+          {/* Light mode: dark green text */}
+          <span className="dark:hidden">
+            Photosynthesis World{' '}
+            <span className="inline-block align-middle">
+              <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">🌱</span>
+            </span>
+          </span>
+          {/* Dark mode: neon green with glow */}
+          <span className="hidden dark:inline-block" style={{
+            color: '#4ade80',
+            textShadow: '0 0 20px rgba(74, 222, 128, 0.5), 0 2px 10px rgba(74, 222, 128, 0.3)',
+          }}>
+            Photosynthesis World{' '}
+            <span className="inline-block align-middle">
+              <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">🌱</span>
+            </span>
+          </span>
+        </motion.h1>
+
+        {/* Tagline - "Learn • Simulate • Visualize" */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-8 md:mb-10 lg:mb-12 font-medium"
+          style={{
+            letterSpacing: '0.05em',
+            color: '#166534',
+          }}
+        >
+          {/* Light mode: dark green */}
+          <span className="dark:hidden">
+            Learn <span className="text-[#86efac]">•</span> Simulate <span className="text-[#86efac]">•</span> Visualize
+          </span>
+          {/* Dark mode: white with dark green dots */}
+          <span className="hidden dark:inline-block text-white">
+            Learn <span className="text-[#2d5a3d]">•</span> Simulate <span className="text-[#2d5a3d]">•</span> Visualize
+          </span>
+        </motion.p>
+
+        {/* Start Simulation Button - Elegant, Balanced Size */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="flex justify-center mt-2 md:mt-4"
+        >
+          <Link href="#simulation">
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-semibold text-white rounded-xl transition-all duration-300"
+              style={{
+                background: '#22c55e',
+                boxShadow: '0 4px 16px rgba(34, 197, 94, 0.35), 0 0 24px rgba(34, 197, 94, 0.15)',
+              }}
+            >
+              {/* Light mode: elegant shadow */}
+              <span className="dark:hidden">
+                Start Simulation
+              </span>
+              {/* Dark mode: subtle glow */}
+              <span className="hidden dark:inline-block" style={{
+                boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5), 0 0 30px rgba(74, 222, 128, 0.3)',
+              }}>
+                Start Simulation
+              </span>
+            </motion.button>
+          </Link>
+        </motion.div>
       </div>
     </section>
   )
