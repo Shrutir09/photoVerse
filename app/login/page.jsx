@@ -31,21 +31,21 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
 
-    // Simulate login (replace with actual auth API)
-    setTimeout(() => {
-      setLoading(false)
-      const userData = {
-        name: formData.email.split('@')[0] || 'User',
-        email: formData.email,
-        level: 1,
-        points: 0,
-        badges: [],
+    try {
+      const result = await login(formData.email, formData.password)
+      
+      if (result.success) {
+        const redirect = localStorage.getItem('redirectAfterLogin') || '/'
+        localStorage.removeItem('redirectAfterLogin')
+        router.push(redirect)
+      } else {
+        setError(result.error || 'Login failed. Please try again.')
       }
-      login(userData)
-      const redirect = localStorage.getItem('redirectAfterLogin') || '/'
-      localStorage.removeItem('redirectAfterLogin')
-      router.push(redirect)
-    }, 1000)
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleGoogleSignIn = () => {

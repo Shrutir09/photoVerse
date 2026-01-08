@@ -9,7 +9,7 @@ import Logo from '../components/Logo'
 
 export default function SignupPage() {
   const router = useRouter()
-  const { login, isAuthenticated } = useAuth()
+  const { signup, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -71,19 +71,19 @@ export default function SignupPage() {
 
     setLoading(true)
 
-    // Simulate signup (replace with actual auth API)
-    setTimeout(() => {
-      setLoading(false)
-      const userData = {
-        name: formData.name,
-        email: formData.email,
-        level: 1,
-        points: 0,
-        badges: [],
+    try {
+      const result = await signup(formData.name, formData.email, formData.password)
+      
+      if (result.success) {
+        router.push('/')
+      } else {
+        setError(result.error || 'Signup failed. Please try again.')
       }
-      login(userData)
-      router.push('/')
-    }, 1000)
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleGoogleSignIn = () => {

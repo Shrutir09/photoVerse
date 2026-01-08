@@ -6,32 +6,69 @@
 npm install
 ```
 
-## Step 2: (Optional) Set Up OpenAI API Key
+## Step 2: Set Up MongoDB
+
+1. **Create a MongoDB Database:**
+   - Sign up for a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) (recommended for cloud hosting)
+   - Or install MongoDB locally on your machine
+
+2. **Get Your Connection String:**
+   - If using MongoDB Atlas:
+     - Create a new cluster
+     - Click "Connect" → "Connect your application"
+     - Copy the connection string (format: `mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority`)
+   - If using local MongoDB:
+     - Use: `mongodb://localhost:27017/photosphere`
+
+3. **Set Up Environment Variables:**
+   - Create a `.env.local` file in the root directory
+   - Add the following variables:
+     ```
+     MONGODB_URI=your_mongodb_connection_string_here
+     JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+     JWT_EXPIRE=7d
+     ```
+   - Generate a secure JWT secret (you can use: `openssl rand -base64 32`)
+
+## Step 3: (Optional) Set Up OpenAI API Key
 
 For the PhotoBot AI tutor feature, you can optionally set up an OpenAI API key:
 
 1. Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
-2. Create a `.env.local` file in the root directory
-3. Add this line:
+2. Add this line to your `.env.local` file:
    ```
    NEXT_PUBLIC_OPENAI_API_KEY=your_api_key_here
    ```
 
 **Note:** PhotoBot will work without an API key using fallback responses for common questions. You can also enter the API key directly in the PhotoBot component interface.
 
-## Step 3: Run the Development Server
+## Step 4: Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-## Step 4: Open in Browser
+## Step 5: Open in Browser
 
 Navigate to [http://localhost:3000](http://localhost:3000)
 
+## Authentication
+
+The app now includes full authentication with MongoDB:
+- **Sign Up:** Create a new account with email and password
+- **Sign In:** Login with your credentials
+- **Protected Routes:** Some pages require authentication
+- **JWT Tokens:** Secure token-based authentication
+- **User Profiles:** Track your level, points, and badges
+
 ## Features to Try
 
-1. **Live Simulation Tab:**
+1. **Authentication:**
+   - Sign up for a new account
+   - Login with your credentials
+   - Access protected features
+
+2. **Live Simulation Tab:**
    - Adjust the sliders (Sunlight, CO₂, Temperature)
    - Watch the plant grow/shrink in real-time
    - See oxygen bubbles float up

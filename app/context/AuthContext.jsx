@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 
 const AuthContext = createContext(null)
 
+const API_BASE = '/api/auth'
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -12,16 +14,29 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // Check for existing session
-    const checkAuth = () => {
-      const userData = localStorage.getItem('user')
-      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token')
       
-      if (isLoggedIn && userData) {
+      if (token) {
         try {
-          setUser(JSON.parse(userData))
-        } catch (e) {
+          const response = await fetch(`${API_BASE}/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setUser(data.user)
+          } else {
+            // Token is invalid, clear it
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          }
+        } catch (error) {
+          console.error('Auth check error:', error)
+          localStorage.removeItem('token')
           localStorage.removeItem('user')
-          localStorage.removeItem('isLoggedIn')
         }
       }
       setLoading(false)
@@ -30,22 +45,70 @@ export function AuthProvider({ children }) {
     checkAuth()
   }, [])
 
-  const login = (userData) => {
-    setUser(userData)
-    localStorage.setItem('user', JSON.stringify(userData))
-    localStorage.setItem('isLoggedIn', 'true')
+  const login = async (email, password) => {
+    try {
+      const response = await fetch(`${API_BASE}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed')
+      }
+
+      // Store token and user data
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      setUser(data.user)
+
+      return { success: true, user: data.user }
+    } catch (error) {
+      console.error('Login error:', error)
+      return { success: false, error: error.message }
+    }
+  }
+
+  const signup = async (name, email, password) => {
+    try {
+      const response = await fetch(`${API_BASE}/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Signup failed')
+      }
+
+      // After signup, automatically log in
+      const loginResult = await login(email, password)
+      return loginResult
+    } catch (error) {
+      console.error('Signup error:', error)
+      return { success: false, error: error.message }
+    }
   }
 
   const logout = () => {
     setUser(null)
+    localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.removeItem('isLoggedIn')
     router.push('/login')
   }
 
   const value = {
     user,
     login,
+    signup,
     logout,
     loading,
     isAuthenticated: !!user,
