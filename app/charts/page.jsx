@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import ProtectedRoute from '../components/ProtectedRoute'
 import { calculateAll } from '../logic/photosynthesis'
 import Charts from '../components/Charts'
@@ -39,38 +40,60 @@ export default function ChartsPage() {
     window.dispatchEvent(event)
   }, [sunlight, co2, temperature])
 
+  const currentData = dataHistory.length > 0 ? dataHistory[dataHistory.length - 1] : null
+
   return (
     <ProtectedRoute>
-      <div className="min-h-screen p-4 md:p-8 bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:bg-chalkboard-bg">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent mb-4">
-            📊 Data Analytics
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400">
-            Visualize photosynthesis data in real-time
-          </p>
-        </div>
+      <div className="min-h-screen p-4 md:p-6 bg-gradient-to-br from-green-50/90 via-emerald-50/70 to-cyan-50/80 dark:bg-chalkboard-bg">
+        <div className="max-w-[1280px] mx-auto space-y-6 md:space-y-8">
+          <motion.div 
+            className="text-center mb-6 md:mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 bg-clip-text text-transparent mb-3 md:mb-4 font-sans">
+              📊 Analytics Dashboard
+            </h1>
+            <p className="text-base md:text-lg text-gray-500 dark:text-chalk-secondary max-w-2xl mx-auto">
+              Real-time visualization of photosynthesis data and environmental metrics
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-1">
-            <Sliders
-              sunlight={sunlight}
-              co2={co2}
-              temperature={temperature}
-              onSunlightChange={setSunlight}
-              onCo2Change={setCo2}
-              onTemperatureChange={setTemperature}
-            />
-          </div>
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {/* Compact Environment Stats Card - Left Side */}
+            <div className="lg:col-span-1">
+              <Sliders
+                sunlight={sunlight}
+                co2={co2}
+                temperature={temperature}
+                onSunlightChange={setSunlight}
+                onCo2Change={setCo2}
+                onTemperatureChange={setTemperature}
+              />
+            </div>
 
-          <div className="lg:col-span-3">
-            {dataHistory.length > 0 && <Charts dataHistory={dataHistory} />}
-          </div>
+            {/* Dominant Chart Cards - Right Side */}
+            <div className="lg:col-span-4">
+              {dataHistory.length > 0 && (
+                <Charts 
+                  dataHistory={dataHistory} 
+                  currentData={currentData}
+                  sunlight={sunlight}
+                  co2={co2}
+                  temperature={temperature}
+                />
+              )}
+            </div>
+          </motion.div>
         </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
     </ProtectedRoute>
   )
 }

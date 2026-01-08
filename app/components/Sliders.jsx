@@ -27,25 +27,30 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
   }
   return (
     <motion.div 
-      className="glass rounded-[20px] p-8 md:p-10 border-2 border-emerald-500/20 dark:border-chalk-border/40 shadow-xl bg-white/90 dark:bg-chalkboard-surface space-y-8 md:space-y-10 h-full flex flex-col"
-      initial={{ opacity: 0, x: 20 }}
+      className="glass rounded-xl p-4 md:p-5 border-2 border-emerald-500/20 dark:border-chalk-border/40 shadow-sm bg-white/90 dark:bg-chalkboard-surface space-y-4 md:space-y-5 h-full flex flex-col overflow-hidden"
+      initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
     >
-      <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 dark:text-chalk-white mb-6">
-        Environment Stats
-      </h3>
+      <div className="text-center mb-3 flex-shrink-0">
+        <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-chalk-white mb-0.5 leading-tight">
+          Environment Stats
+        </h3>
+        <p className="text-[10px] md:text-xs text-gray-500 dark:text-chalk-secondary leading-tight">
+          Adjust parameters
+        </p>
+      </div>
 
       {/* Sunlight Slider */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-400/20 to-orange-400/20 dark:from-yellow-500/30 dark:to-orange-500/30 flex items-center justify-center">
-              <span className="text-2xl md:text-3xl">🌞</span>
+      <div className="space-y-2.5 flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400/20 to-orange-400/20 dark:from-yellow-500/30 dark:to-orange-500/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-base md:text-lg">🌞</span>
             </div>
-            <span className="font-bold text-lg md:text-xl text-gray-800 dark:text-chalk-white">Sunlight</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">Sunlight</span>
           </div>
-          <span className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-chalk-yellow">
+          <span className="text-base md:text-lg font-semibold text-yellow-600 dark:text-chalk-yellow flex-shrink-0">
             {sunlight}%
           </span>
         </div>
@@ -55,21 +60,21 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
           max="100"
           value={sunlight}
           onChange={(e) => onSunlightChange(Number(e.target.value))}
-          className="w-full h-6 rounded-full appearance-none cursor-pointer slider-thumb text-yellow-500"
+          className="w-full h-5 rounded-full appearance-none cursor-pointer slider-thumb text-yellow-500"
           style={getSliderStyle(sunlight, '#fbbf24')}
         />
       </div>
 
       {/* CO₂ Slider */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400/20 to-emerald-400/20 dark:from-green-500/30 dark:to-emerald-500/30 flex items-center justify-center">
-              <span className="text-2xl md:text-3xl">🌬</span>
+      <div className="space-y-2.5 flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400/20 to-emerald-400/20 dark:from-green-500/30 dark:to-emerald-500/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-base md:text-lg">🌬</span>
             </div>
-            <span className="font-bold text-lg md:text-xl text-gray-800 dark:text-chalk-white">CO₂ Level</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">CO₂ Level</span>
           </div>
-          <span className="text-2xl md:text-3xl font-bold text-green-600 dark:text-chalk-emerald">
+          <span className="text-base md:text-lg font-semibold text-green-600 dark:text-chalk-emerald flex-shrink-0">
             {co2}%
           </span>
         </div>
@@ -79,21 +84,21 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
           max="100"
           value={co2}
           onChange={(e) => onCo2Change(Number(e.target.value))}
-          className="w-full h-6 rounded-full appearance-none cursor-pointer slider-thumb text-green-500"
+          className="w-full h-5 rounded-full appearance-none cursor-pointer slider-thumb text-green-500"
           style={getSliderStyle(co2, '#22c55e')}
         />
       </div>
 
       {/* Temperature Slider */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400/20 to-red-400/20 dark:from-orange-500/30 dark:to-red-500/30 flex items-center justify-center">
-              <span className="text-2xl md:text-3xl">🌡️</span>
+      <div className="space-y-2.5 flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400/20 to-red-400/20 dark:from-orange-500/30 dark:to-red-500/30 flex items-center justify-center flex-shrink-0">
+              <span className="text-base md:text-lg">🌡️</span>
             </div>
-            <span className="font-bold text-lg md:text-xl text-gray-800 dark:text-chalk-white">Temperature</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">Temperature</span>
           </div>
-          <span className="text-2xl md:text-3xl font-bold text-orange-600 dark:text-orange-400">
+          <span className="text-base md:text-lg font-semibold text-orange-600 dark:text-orange-400 flex-shrink-0 whitespace-nowrap">
             {temperature}°C
           </span>
         </div>
@@ -103,7 +108,7 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
           max="100"
           value={temperature}
           onChange={(e) => onTemperatureChange(Number(e.target.value))}
-          className="w-full h-6 rounded-full appearance-none cursor-pointer slider-thumb text-orange-500"
+          className="w-full h-5 rounded-full appearance-none cursor-pointer slider-thumb text-orange-500"
           style={getSliderStyle(temperature, '#f97316')}
         />
       </div>

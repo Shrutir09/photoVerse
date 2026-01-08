@@ -1,110 +1,214 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
 
-export default function Charts({ dataHistory }) {
-  return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-        📈 Live Data Charts
-      </h2>
-      
-      <div className="glass rounded-3xl p-6 md:p-8 border-2 border-green-500/20 shadow-xl">
-        <h3 className="text-xl font-bold mb-6 text-green-700 dark:text-green-400 flex items-center gap-2">
-          <span className="text-2xl">🌬</span>
-          Oxygen Production Over Time
-        </h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <AreaChart data={dataHistory} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorOxygen" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.9}/>
-                <stop offset="50%" stopColor="#22c55e" stopOpacity={0.6}/>
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#22c55e" opacity={0.2} />
-            <XAxis 
-              dataKey="time" 
-              stroke="#16a34a" 
-              style={{ fontSize: '12px', fontWeight: '600' }}
-              tick={{ fill: '#16a34a' }}
-            />
-            <YAxis 
-              stroke="#16a34a" 
-              domain={[0, 100]} 
-              style={{ fontSize: '12px', fontWeight: '600' }}
-              tick={{ fill: '#16a34a' }}
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'rgba(34, 197, 94, 0.95)', 
-                border: '2px solid #22c55e', 
-                borderRadius: '12px',
-                color: '#fff',
-                fontWeight: '600',
-                boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)'
-              }} 
-            />
-            <Area 
-              type="monotone" 
-              dataKey="oxygen" 
-              stroke="#3b82f6" 
-              strokeWidth={3}
-              fillOpacity={1} 
-              fill="url(#colorOxygen)" 
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+export default function Charts({ dataHistory, currentData, sunlight, co2, temperature }) {
+  const [isAnimating, setIsAnimating] = useState(true)
 
-      <div className="glass rounded-3xl p-6 md:p-8 border-2 border-green-500/20 shadow-xl">
-        <h3 className="text-xl font-bold mb-6 text-green-700 dark:text-green-400 flex items-center gap-2">
-          <span className="text-2xl">🌱</span>
-          Photosynthesis Rate Over Time
-        </h3>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={dataHistory} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorRate" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#22c55e" stopOpacity={1}/>
-                <stop offset="100%" stopColor="#16a34a" stopOpacity={1}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#22c55e" opacity={0.2} />
-            <XAxis 
-              dataKey="time" 
-              stroke="#16a34a" 
-              style={{ fontSize: '12px', fontWeight: '600' }}
-              tick={{ fill: '#16a34a' }}
-            />
-            <YAxis 
-              stroke="#16a34a" 
-              domain={[0, 100]} 
-              style={{ fontSize: '12px', fontWeight: '600' }}
-              tick={{ fill: '#16a34a' }}
-            />
-            <Tooltip 
-              contentStyle={{ 
-                backgroundColor: 'rgba(34, 197, 94, 0.95)', 
-                border: '2px solid #22c55e', 
-                borderRadius: '12px',
-                color: '#fff',
-                fontWeight: '600',
-                boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)'
-              }} 
-            />
-            <Line 
-              type="monotone" 
-              dataKey="rate" 
-              stroke="url(#colorRate)" 
-              strokeWidth={4}
-              dot={{ fill: '#22c55e', r: 5, strokeWidth: 2, stroke: '#fff' }}
-              activeDot={{ r: 7, fill: '#16a34a' }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+  useEffect(() => {
+    setIsAnimating(true)
+    const timer = setTimeout(() => setIsAnimating(false), 1000)
+    return () => clearTimeout(timer)
+  }, [dataHistory.length])
+
+  const currentOxygen = currentData?.oxygen || 0
+  const currentRate = currentData?.rate || 0
+
+  return (
+    <div className="space-y-5 md:space-y-6">
+      {/* Oxygen Production Chart */}
+      <motion.div
+        className="glass rounded-xl p-5 md:p-6 bg-white/90 dark:bg-chalkboard-surface shadow-sm hover:shadow-md transition-all duration-300"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* Header with value indicator */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
+          <div className="flex items-start gap-2.5 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+              🌬
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-chalk-white leading-tight">
+                Oxygen Production
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-chalk-secondary mt-0.5 leading-relaxed">
+                Real-time oxygen generation over time
+              </p>
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            <div className="px-3 py-1.5 bg-gray-50 dark:bg-chalkboard-bg/50 rounded-lg border border-gray-200 dark:border-chalk-border/30">
+              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">Current</div>
+              <div className="text-lg font-semibold text-gray-700 dark:text-chalk-white">
+                {currentOxygen.toFixed(1)}%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full" style={{ height: '240px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart 
+              data={dataHistory} 
+              margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+            >
+              <defs>
+                <linearGradient id="colorOxygen" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.15}/>
+                  <stop offset="100%" stopColor="#3b82f6" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid 
+                strokeDasharray="2 2" 
+                stroke="currentColor" 
+                opacity={0.08}
+                className="text-gray-300 dark:text-chalk-border/40"
+              />
+              <XAxis 
+                dataKey="time" 
+                stroke="currentColor"
+                className="text-gray-400 dark:text-chalk-secondary/60"
+                style={{ fontSize: '10px' }}
+                tick={{ fill: 'currentColor' }}
+                tickLine={false}
+              />
+              <YAxis 
+                stroke="currentColor"
+                className="text-gray-400 dark:text-chalk-secondary/60"
+                domain={[0, 100]} 
+                style={{ fontSize: '10px' }}
+                tick={{ fill: 'currentColor' }}
+                tickLine={false}
+                width={35}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                  border: '1px solid #e5e7eb', 
+                  borderRadius: '8px',
+                  color: '#374151',
+                  fontSize: '12px',
+                  padding: '8px 12px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                }}
+                labelStyle={{ color: '#6b7280', fontSize: '11px', marginBottom: '4px' }}
+                wrapperStyle={{ zIndex: 1000 }}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="oxygen" 
+                stroke="#3b82f6" 
+                strokeWidth={2}
+                fillOpacity={1}
+                fill="url(#colorOxygen)"
+                animationDuration={600}
+                animationEasing="ease-out"
+                dot={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </motion.div>
+
+      {/* Photosynthesis Rate Chart */}
+      <motion.div
+        className="glass rounded-xl p-5 md:p-6 bg-white/90 dark:bg-chalkboard-surface shadow-sm hover:shadow-md transition-all duration-300"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        {/* Header with value indicator */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-3">
+          <div className="flex items-start gap-2.5 min-w-0 flex-1">
+            <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/20 flex items-center justify-center text-lg flex-shrink-0 mt-0.5">
+              🌱
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-chalk-white leading-tight">
+                Photosynthesis Rate
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-chalk-secondary mt-0.5 leading-relaxed">
+                Efficiency of the photosynthesis process
+              </p>
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            <div className="px-3 py-1.5 bg-gray-50 dark:bg-chalkboard-bg/50 rounded-lg border border-gray-200 dark:border-chalk-border/30">
+              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">Current</div>
+              <div className="text-lg font-semibold text-gray-700 dark:text-chalk-white">
+                {currentRate.toFixed(1)}%
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full" style={{ height: '240px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart 
+              data={dataHistory} 
+              margin={{ top: 8, right: 12, left: 0, bottom: 8 }}
+            >
+              <defs>
+                <linearGradient id="colorRate" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#22c55e" stopOpacity={0.12}/>
+                  <stop offset="100%" stopColor="#22c55e" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid 
+                strokeDasharray="2 2" 
+                stroke="currentColor" 
+                opacity={0.08}
+                className="text-gray-300 dark:text-chalk-border/40"
+              />
+              <XAxis 
+                dataKey="time" 
+                stroke="currentColor"
+                className="text-gray-400 dark:text-chalk-secondary/60"
+                style={{ fontSize: '10px' }}
+                tick={{ fill: 'currentColor' }}
+                tickLine={false}
+              />
+              <YAxis 
+                stroke="currentColor"
+                className="text-gray-400 dark:text-chalk-secondary/60"
+                domain={[0, 100]} 
+                style={{ fontSize: '10px' }}
+                tick={{ fill: 'currentColor' }}
+                tickLine={false}
+                width={35}
+              />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.98)',
+                  border: '1px solid #e5e7eb', 
+                  borderRadius: '8px',
+                  color: '#374151',
+                  fontSize: '12px',
+                  padding: '8px 12px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                }}
+                labelStyle={{ color: '#6b7280', fontSize: '11px', marginBottom: '4px' }}
+                wrapperStyle={{ zIndex: 1000 }}
+              />
+              <Area 
+                type="monotone" 
+                dataKey="rate" 
+                stroke="#22c55e" 
+                strokeWidth={2}
+                fill="url(#colorRate)"
+                fillOpacity={1}
+                animationDuration={600}
+                animationEasing="ease-out"
+                dot={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </motion.div>
     </div>
   )
 }
