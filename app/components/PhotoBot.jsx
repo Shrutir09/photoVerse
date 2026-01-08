@@ -63,8 +63,8 @@ export default function PhotoBot() {
   }
 
   return (
-    <div className="glass rounded-2xl p-6 space-y-4">
-      <h2 className="text-2xl font-bold text-center">{t('photobot.title', language)}</h2>
+    <div className="glass rounded-2xl p-6 space-y-4 bg-white/90 dark:bg-chalkboard-surface">
+      <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-chalk-white">{t('photobot.title', language)}</h2>
 
       {/* API Key Input */}
       <div className="space-y-2">
@@ -73,7 +73,7 @@ export default function PhotoBot() {
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
           placeholder={language === 'hi' ? 'OpenAI API Key (वैकल्पिक)' : 'OpenAI API Key (optional)'}
-          className="w-full px-4 py-2 rounded-lg bg-white/10 dark:bg-black/20 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-4 py-2 rounded-lg bg-white dark:bg-chalkboard-bg border border-gray-300 dark:border-chalk-border text-gray-800 dark:text-chalk-white placeholder-gray-500 dark:placeholder-chalk-secondary focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
 
@@ -83,7 +83,7 @@ export default function PhotoBot() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder={t('photobot.placeholder', language)}
-          className="w-full px-4 py-3 rounded-lg bg-white/10 dark:bg-black/20 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+          className="w-full px-4 py-3 rounded-lg bg-white dark:bg-chalkboard-bg border border-gray-300 dark:border-chalk-border text-gray-800 dark:text-chalk-white placeholder-gray-500 dark:placeholder-chalk-secondary focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           rows="3"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && e.ctrlKey) {
@@ -104,13 +104,13 @@ export default function PhotoBot() {
 
       {/* Example Questions */}
       <div className="space-y-2">
-        <div className="text-sm font-semibold">{t('photobot.exampleQuestions', language)}</div>
+        <div className="text-sm font-semibold text-gray-800 dark:text-chalk-white">{t('photobot.exampleQuestions', language)}</div>
         <div className="flex flex-wrap gap-2">
           {examples.map((example, idx) => (
             <motion.button
               key={idx}
               onClick={() => handleExampleClick(example)}
-              className="px-3 py-1 text-sm bg-blue-500/20 hover:bg-blue-500/30 rounded-lg border border-blue-500/30"
+              className="px-3 py-1 text-sm bg-blue-500/20 dark:bg-blue-500/30 hover:bg-blue-500/30 dark:hover:bg-blue-500/40 rounded-lg border border-blue-500/30 dark:border-blue-500/40 text-blue-700 dark:text-blue-200 font-medium"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -125,11 +125,11 @@ export default function PhotoBot() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-4 p-4 bg-green-500/10 rounded-lg border border-green-500/30"
+          className="mt-4 p-4 bg-green-500/10 dark:bg-green-500/20 rounded-lg border border-green-500/30 dark:border-green-500/40"
         >
           <div className="flex items-start gap-2">
             <span className="text-2xl">🤖</span>
-            <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+            <p className="text-gray-800 dark:text-chalk-white whitespace-pre-wrap">
               {answer}
             </p>
           </div>

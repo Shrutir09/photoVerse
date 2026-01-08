@@ -89,6 +89,7 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={true}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all relative ${
                   isActive(item.href)
                     ? 'text-green-500 bg-green-500/10 dark:text-chalk-emerald dark:bg-chalk-emerald/10'
@@ -153,25 +154,25 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                      className="absolute right-0 mt-3 w-72 glass rounded-2xl p-4 shadow-2xl border-2 border-green-500/30 backdrop-blur-xl"
+                      className="absolute right-0 mt-3 w-72 glass rounded-2xl p-4 shadow-2xl border-2 border-green-500/30 dark:border-chalk-border/30 backdrop-blur-xl bg-white/95 dark:bg-chalkboard-surface/95"
                     >
                       {/* User Header */}
-                      <div className="flex items-center gap-4 p-4 mb-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 rounded-xl border border-green-500/20">
+                      <div className="flex items-center gap-4 p-4 mb-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 dark:from-green-500/20 dark:to-emerald-500/20 rounded-xl border border-green-500/20 dark:border-chalk-border/30">
                         <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white font-bold text-lg shadow-lg ring-2 ring-green-500/30">
                           {user.name?.[0]?.toUpperCase() || 'U'}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="font-bold text-white text-lg truncate">
+                          <div className="font-bold text-gray-800 dark:text-white text-lg truncate">
                             {user.name || 'User'}
                           </div>
-                          <div className="text-sm text-green-100">
+                          <div className="text-sm text-gray-600 dark:text-green-100">
                             {user.email || 'user@example.com'}
                           </div>
                           <div className="flex items-center gap-3 mt-1">
-                            <div className="text-xs bg-green-500/20 px-2 py-1 rounded-full text-green-100">
+                            <div className="text-xs bg-green-500/20 dark:bg-green-500/30 px-2 py-1 rounded-full text-green-700 dark:text-green-100 font-semibold">
                               Level {user.level || 1}
                             </div>
-                            <div className="text-xs bg-blue-500/20 px-2 py-1 rounded-full text-blue-100">
+                            <div className="text-xs bg-blue-500/20 dark:bg-blue-500/30 px-2 py-1 rounded-full text-blue-700 dark:text-blue-100 font-semibold">
                               {user.points || 0} pts
                             </div>
                           </div>
@@ -182,58 +183,61 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                       <div className="space-y-1">
                         <Link
                           href="/profile"
-                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all group"
+                          prefetch={true}
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 dark:hover:bg-green-500/20 transition-all group"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <span className="text-2xl">👤</span>
                           <div className="flex-1">
-                            <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                            <div className="font-semibold text-gray-800 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors">
                               {t('navbar.profile', language)}
                             </div>
-                            <div className="text-xs text-green-100">
+                            <div className="text-xs text-gray-600 dark:text-green-100">
                               {t('navbar.viewStats', language)}
                             </div>
                           </div>
-                          <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                          <span className="text-green-600 dark:text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                         </Link>
 
                         <Link
                           href="/badges"
-                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all group"
+                          prefetch={true}
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 dark:hover:bg-green-500/20 transition-all group"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <span className="text-2xl">🏆</span>
                           <div className="flex-1">
-                            <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                            <div className="font-semibold text-gray-800 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors">
                               {t('navbar.badges', language)}
                             </div>
-                            <div className="text-xs text-green-100">
+                            <div className="text-xs text-gray-600 dark:text-green-100">
                               {(user.badges || []).length} {t('navbar.unlocked', language)}
                             </div>
                           </div>
-                          <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                          <span className="text-green-600 dark:text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                         </Link>
 
                         <Link
                           href="/leaderboard"
-                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all group"
+                          prefetch={true}
+                          className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 dark:hover:bg-green-500/20 transition-all group"
                           onClick={() => setShowProfileMenu(false)}
                         >
                           <span className="text-2xl">📊</span>
                           <div className="flex-1">
-                            <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
+                            <div className="font-semibold text-gray-800 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors">
                               {t('navbar.leaderboard', language)}
                             </div>
-                            <div className="text-xs text-green-100">
+                            <div className="text-xs text-gray-600 dark:text-green-100">
                               {t('navbar.seeRankings', language)}
                             </div>
                           </div>
-                          <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                          <span className="text-green-600 dark:text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                         </Link>
                       </div>
 
                       {/* Divider */}
-                      <div className="border-t border-green-500/20 my-3" />
+                      <div className="border-t border-gray-300 dark:border-green-500/20 my-3" />
 
                       {/* Logout */}
                       <button
@@ -241,18 +245,18 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                           setShowProfileMenu(false)
                           logout()
                         }}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 transition-all group"
+                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 dark:hover:bg-red-500/20 transition-all group"
                       >
                         <span className="text-2xl">🚪</span>
                         <div className="flex-1 text-left">
-                          <div className="font-semibold text-red-400 group-hover:text-red-300 transition-colors">
+                          <div className="font-semibold text-red-600 dark:text-red-400 group-hover:text-red-700 dark:group-hover:text-red-300 transition-colors">
                             {t('navbar.logout', language)}
                           </div>
-                          <div className="text-xs text-red-300/70">
+                          <div className="text-xs text-red-600/80 dark:text-red-300/70">
                             {t('navbar.signOut', language)}
                           </div>
                         </div>
-                        <span className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
+                        <span className="text-red-600 dark:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
                       </button>
                     </motion.div>
                   )}
@@ -314,6 +318,7 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     onClick={() => setShowMobileMenu(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                       isActive(item.href)
@@ -335,6 +340,7 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                     <div className="border-t border-green-500/20 my-3" />
                     <Link
                       href="/profile"
+                      prefetch={true}
                       onClick={() => setShowMobileMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all"
                     >
@@ -353,6 +359,7 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                     </Link>
                     <Link
                       href="/badges"
+                      prefetch={true}
                       onClick={() => setShowMobileMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all"
                     >
@@ -362,6 +369,7 @@ export default function Navbar({ darkMode, onDarkModeToggle }) {
                     </Link>
                     <Link
                       href="/leaderboard"
+                      prefetch={true}
                       onClick={() => setShowMobileMenu(false)}
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all"
                     >

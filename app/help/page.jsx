@@ -3,34 +3,38 @@
 import ProtectedRoute from '../components/ProtectedRoute'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
+import Footer from '../components/Footer'
 
 export default function HelpPage() {
+  const { language } = useTranslation()
   const [openFaq, setOpenFaq] = useState(null)
 
   const faqs = [
     {
-      question: 'How do I use the simulation?',
-      answer: 'Adjust the sliders for Sunlight, CO₂, and Temperature to see how they affect photosynthesis. Watch the plant grow, oxygen bubbles appear, and check the data panels for real-time statistics.',
+      question: t('help.faq1', language),
+      answer: t('help.faq1Answer', language),
     },
     {
-      question: 'What is the photosynthesis formula?',
-      answer: 'The formula used is: Photosynthesis Rate = (Sunlight × CO₂) / Temperature. This simplified model demonstrates how these factors interact in real photosynthesis.',
+      question: t('help.faq2', language),
+      answer: t('help.faq2Answer', language),
     },
     {
-      question: 'How do I earn badges?',
-      answer: 'Complete challenges in the Games section, achieve optimal photosynthesis rates, and reach milestones. Badges unlock as you progress and earn points.',
+      question: t('help.faq3', language),
+      answer: t('help.faq3Answer', language),
     },
     {
-      question: 'Can I use PhotoBot without an API key?',
-      answer: 'Yes! PhotoBot works with fallback responses for common questions. For advanced AI features, you can optionally add your OpenAI API key.',
+      question: t('help.faq4', language),
+      answer: t('help.faq4Answer', language),
     },
     {
-      question: 'Is my data saved?',
-      answer: 'Your progress, badges, and preferences are saved locally in your browser. For cloud sync and multi-device access, account features are coming soon.',
+      question: t('help.faq5', language),
+      answer: t('help.faq5Answer', language),
     },
     {
-      question: 'How do I change the language?',
-      answer: 'Click the language toggle button (A/अ) in the navbar to switch between English and Hindi. Your preference is automatically saved.',
+      question: t('help.faq6', language),
+      answer: t('help.faq6Answer', language),
     },
   ]
 
@@ -45,13 +49,13 @@ export default function HelpPage() {
             className="glass rounded-3xl p-8 md:p-12 border-2 border-green-500/20"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              Help & Support
+              {t('help.title', language)}
             </h1>
 
             <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold mb-4 text-green-600 dark:text-green-400">
-                  Get in Touch
+                  {t('help.getInTouch', language)}
                 </h2>
                 <div className="space-y-4">
                   <a
@@ -60,7 +64,7 @@ export default function HelpPage() {
                   >
                     <span className="text-3xl">📧</span>
                     <div>
-                      <div className="font-semibold text-gray-700 dark:text-gray-300">Email Support</div>
+                      <div className="font-semibold text-gray-700 dark:text-gray-300">{t('help.emailSupport', language)}</div>
                       <div className="text-green-600 dark:text-green-400 group-hover:underline">support@photosphere.app</div>
                     </div>
                   </a>
@@ -70,7 +74,7 @@ export default function HelpPage() {
                   >
                     <span className="text-3xl">📞</span>
                     <div>
-                      <div className="font-semibold text-gray-700 dark:text-gray-300">Phone Support</div>
+                      <div className="font-semibold text-gray-700 dark:text-gray-300">{t('help.phoneSupport', language)}</div>
                       <div className="text-green-600 dark:text-green-400 group-hover:underline">+91-XXXXXXXXXX</div>
                     </div>
                   </a>
@@ -87,7 +91,7 @@ export default function HelpPage() {
             className="glass rounded-3xl p-8 md:p-12 border-2 border-green-500/20"
           >
             <h2 className="text-3xl font-bold mb-6 text-green-600 dark:text-green-400">
-              Frequently Asked Questions
+              {t('help.faq', language)}
             </h2>
 
             <div className="space-y-4">
@@ -123,6 +127,7 @@ export default function HelpPage() {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </ProtectedRoute>
   )
 }

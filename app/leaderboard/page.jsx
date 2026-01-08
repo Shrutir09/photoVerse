@@ -4,9 +4,13 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
+import Footer from '../components/Footer'
 
 export default function LeaderboardPage() {
   const { user } = useAuth()
+  const { language } = useTranslation()
   const [leaderboard, setLeaderboard] = useState([])
   const [userRank, setUserRank] = useState(null)
 
@@ -60,14 +64,14 @@ export default function LeaderboardPage() {
             className="glass rounded-3xl p-8 border-2 border-green-500/20 text-center"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              📊 Leaderboard
+              📊 {t('leaderboard.title', language)}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Top performers in PHOTOSPHERE
+              {t('leaderboard.subtitle', language)}
             </p>
             {userRank && (
               <div className="mt-4 inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full text-white font-semibold">
-                Your Rank: #{userRank}
+                {t('leaderboard.yourRank', language)}: #{userRank}
               </div>
             )}
           </motion.div>
@@ -114,9 +118,9 @@ export default function LeaderboardPage() {
                         </h3>
                       </div>
                       <div className="flex items-center gap-4 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        <span>Level {player.level}</span>
+                        <span>{t('leaderboard.level', language)} {player.level}</span>
                         <span>•</span>
-                        <span>{player.badges} badges</span>
+                        <span>{player.badges} {t('leaderboard.badges', language)}</span>
                       </div>
                     </div>
 
@@ -125,7 +129,7 @@ export default function LeaderboardPage() {
                       <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                         {player.points}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">points</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">{t('leaderboard.points', language)}</div>
                     </div>
                   </div>
                 </motion.div>
@@ -141,31 +145,32 @@ export default function LeaderboardPage() {
             className="glass rounded-2xl p-6 border-2 border-green-500/20"
           >
             <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-              📈 Leaderboard Stats
+              📈 {t('leaderboard.leaderboardStats', language)}
             </h2>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                   {leaderboard.length}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Total Players</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{t('leaderboard.totalPlayers', language)}</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                   {leaderboard[0]?.points || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Top Score</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{t('leaderboard.topScore', language)}</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                   {Math.round(leaderboard.reduce((sum, p) => sum + p.points, 0) / leaderboard.length) || 0}
                 </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Average Score</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">{t('leaderboard.averageScore', language)}</div>
               </div>
             </div>
           </motion.div>
         </div>
       </div>
+      <Footer />
     </ProtectedRoute>
   )
 }

@@ -4,9 +4,13 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
+import Footer from '../components/Footer'
 
 export default function BadgesPage() {
   const { user } = useAuth()
+  const { language } = useTranslation()
   const [badges, setBadges] = useState([])
 
   const allBadges = [
@@ -101,10 +105,10 @@ export default function BadgesPage() {
             className="glass rounded-3xl p-8 border-2 border-green-500/20 text-center"
           >
             <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              🏆 Your Badges
+              🏆 {t('badges.title', language)}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              {unlockedCount} of {badges.length} badges unlocked
+              {unlockedCount} {t('badges.subtitle', language)} {badges.length}
             </p>
             <div className="mt-4 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden max-w-md mx-auto">
               <motion.div
@@ -158,11 +162,11 @@ export default function BadgesPage() {
                   </p>
                   {badge.unlocked ? (
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/20 rounded-full">
-                      <span className="text-green-600 dark:text-green-400 font-semibold">✓ Unlocked</span>
+                      <span className="text-green-600 dark:text-green-400 font-semibold">✓ {t('badges.unlocked', language)}</span>
                     </div>
                   ) : (
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-                      <span className="text-gray-500 dark:text-gray-400 font-semibold">🔒 Locked</span>
+                      <span className="text-gray-500 dark:text-gray-400 font-semibold">🔒 {t('badges.locked', language)}</span>
                     </div>
                   )}
                 </div>
@@ -171,6 +175,7 @@ export default function BadgesPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </ProtectedRoute>
   )
 }

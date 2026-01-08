@@ -4,9 +4,13 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
+import Footer from '../components/Footer'
 
 export default function ProfilePage() {
   const { user } = useAuth()
+  const { language } = useTranslation()
   const [stats, setStats] = useState({
     totalGames: 0,
     gamesWon: 0,
@@ -61,19 +65,19 @@ export default function ProfilePage() {
                 <p className="text-gray-600 dark:text-gray-400 mb-4">{user.email}</p>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <div className="px-4 py-2 bg-green-500/10 rounded-lg">
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Level</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t('navbar.level', language)}</div>
                     <div className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {user.level || 1}
                     </div>
                   </div>
                   <div className="px-4 py-2 bg-blue-500/10 rounded-lg">
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Points</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t('navbar.pts', language)}</div>
                     <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {user.points || 0}
                     </div>
                   </div>
                   <div className="px-4 py-2 bg-yellow-500/10 rounded-lg">
-                    <div className="text-sm text-gray-600 dark:text-gray-400">Badges</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">{t('navbar.badges', language)}</div>
                     <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       {(user.badges || []).length}
                     </div>
@@ -92,27 +96,27 @@ export default function ProfilePage() {
               className="glass rounded-2xl p-6 border-2 border-green-500/20"
             >
               <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-                📊 Statistics
+                📊 {t('profile.statistics', language)}
               </h2>
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Total Games</span>
+                  <span className="text-gray-600 dark:text-gray-400">{t('profile.totalGames', language)}</span>
                   <span className="font-bold text-lg">{stats.totalGames}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Games Won</span>
+                  <span className="text-gray-600 dark:text-gray-400">{t('profile.gamesWon', language)}</span>
                   <span className="font-bold text-lg text-green-600 dark:text-green-400">
                     {stats.gamesWon}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Best Score</span>
+                  <span className="text-gray-600 dark:text-gray-400">{t('profile.bestScore', language)}</span>
                   <span className="font-bold text-lg text-blue-600 dark:text-blue-400">
                     {stats.bestScore}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Win Rate</span>
+                  <span className="text-gray-600 dark:text-gray-400">{t('profile.winRate', language)}</span>
                   <span className="font-bold text-lg">
                     {stats.totalGames > 0
                       ? Math.round((stats.gamesWon / stats.totalGames) * 100)
@@ -130,12 +134,12 @@ export default function ProfilePage() {
               className="glass rounded-2xl p-6 border-2 border-green-500/20"
             >
               <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-                🎯 Progress
+                🎯 {t('profile.progress', language)}
               </h2>
               <div className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600 dark:text-gray-400">Level Progress</span>
+                    <span className="text-gray-600 dark:text-gray-400">{t('profile.levelProgress', language)}</span>
                     <span className="text-sm font-semibold">
                       {(user.points || 0) % 100}/100
                     </span>
@@ -151,10 +155,10 @@ export default function ProfilePage() {
                 </div>
                 <div className="pt-4">
                   <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                    Next Level: {((user.level || 1) + 1)}
+                    {t('profile.nextLevel', language)}: {((user.level || 1) + 1)}
                   </div>
                   <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                    {100 - ((user.points || 0) % 100)} points needed
+                    {100 - ((user.points || 0) % 100)} {t('profile.pointsNeeded', language)}
                   </div>
                 </div>
               </div>
@@ -169,13 +173,13 @@ export default function ProfilePage() {
             className="glass rounded-2xl p-6 border-2 border-green-500/20"
           >
             <h2 className="text-xl font-bold mb-4 text-green-600 dark:text-green-400">
-              🌱 Recent Activity
+              🌱 {t('profile.recentActivity', language)}
             </h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-green-500/5 rounded-lg">
                 <span className="text-2xl">🎮</span>
                 <div className="flex-1">
-                  <div className="font-semibold">Started playing games</div>
+                  <div className="font-semibold">{t('profile.startedPlaying', language)}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     {new Date().toLocaleDateString()}
                   </div>
@@ -184,7 +188,7 @@ export default function ProfilePage() {
               <div className="flex items-center gap-3 p-3 bg-green-500/5 rounded-lg">
                 <span className="text-2xl">📚</span>
                 <div className="flex-1">
-                  <div className="font-semibold">Exploring learning center</div>
+                  <div className="font-semibold">{t('profile.exploringLearning', language)}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
                     {new Date().toLocaleDateString()}
                   </div>
@@ -194,6 +198,7 @@ export default function ProfilePage() {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </ProtectedRoute>
   )
 }

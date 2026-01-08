@@ -9,12 +9,26 @@ import { t } from '../utils/translations'
 export default function Charts({ dataHistory, currentData, sunlight, co2, temperature }) {
   const { language } = useTranslation()
   const [isAnimating, setIsAnimating] = useState(true)
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
     setIsAnimating(true)
     const timer = setTimeout(() => setIsAnimating(false), 1000)
     return () => clearTimeout(timer)
   }, [dataHistory.length])
+
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    }
+    checkDarkMode()
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+    return () => observer.disconnect()
+  }, [])
 
   const currentOxygen = currentData?.oxygen || 0
   const currentRate = currentData?.rate || 0
@@ -186,15 +200,15 @@ export default function Charts({ dataHistory, currentData, sunlight, co2, temper
               />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.98)',
-                  border: '1px solid #e5e7eb', 
+                  backgroundColor: isDark ? 'rgba(22, 61, 51, 0.98)' : 'rgba(255, 255, 255, 0.98)',
+                  border: isDark ? '1px solid rgba(47, 111, 90, 0.5)' : '1px solid #e5e7eb', 
                   borderRadius: '8px',
-                  color: '#374151',
+                  color: isDark ? '#E6F5EE' : '#374151',
                   fontSize: '12px',
                   padding: '8px 12px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                  boxShadow: isDark ? '0 2px 8px rgba(0, 0, 0, 0.5)' : '0 2px 8px rgba(0, 0, 0, 0.1)'
                 }}
-                labelStyle={{ color: '#6b7280', fontSize: '11px', marginBottom: '4px' }}
+                labelStyle={{ color: isDark ? '#B7D9CB' : '#6b7280', fontSize: '11px', marginBottom: '4px' }}
                 wrapperStyle={{ zIndex: 1000 }}
               />
               <Area 

@@ -17,7 +17,7 @@ export default function MyPlantCard() {
       transition={{ duration: 0.6 }}
       className="w-full"
     >
-      <Link href="/my-plant">
+      <Link href="/my-plant" prefetch={true}>
         <motion.div
           whileHover={{ scale: 1.02, y: -4 }}
           whileTap={{ scale: 0.98 }}
