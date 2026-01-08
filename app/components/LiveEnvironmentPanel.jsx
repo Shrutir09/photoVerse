@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
+  const { language } = useTranslation()
   const [environment, setEnvironment] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -302,7 +305,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               setEnvironment(cachedData)
               setLastUpdate(new Date(parseInt(cachedTime)))
               setLoading(false)
-              setError('Using cached data (API unavailable)')
+              setError(t('liveEnvironment.usingCached', language))
               if (onEnvironmentChange) {
                 onEnvironmentChange(cachedData)
               }
@@ -355,7 +358,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
           <div className="flex items-center justify-center py-8">
             <div className="text-center">
               <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-600 dark:text-chalk-secondary">Loading environment data...</p>
+              <p className="text-gray-600 dark:text-chalk-secondary">{t('liveEnvironment.loading', language)}</p>
             </div>
           </div>
         </div>
@@ -368,7 +371,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
       <section className="scroll-mt-24">
         <div className="glass rounded-2xl p-6 border-2 border-red-500/20">
           <div className="text-center py-8">
-            <p className="text-red-500 font-semibold mb-2">🌍 Environment data unavailable</p>
+            <p className="text-red-500 font-semibold mb-2">🌍 {t('liveEnvironment.unavailable', language)}</p>
             <p className="text-sm text-gray-600 dark:text-chalk-secondary">{error}</p>
           </div>
         </div>
@@ -381,7 +384,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
   return (
     <section className="scroll-mt-24">
       <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-        🌍 Live Environment Around You
+        🌍 {t('liveEnvironment.title', language)}
       </h2>
       
       <motion.div
@@ -401,16 +404,16 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-2xl">🌡️</span>
                 <div>
-                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">Weather</div>
+                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">{t('liveEnvironment.weather', language)}</div>
                   <div className="font-bold text-lg">
                     <AnimatedNumber value={environment.temperature} />°C
                   </div>
                 </div>
               </div>
               <div className="text-xs space-y-1">
-                <div>💧 Humidity: {environment.humidity}%</div>
-                <div>🌧️ Rain: {environment.rainfall.toFixed(1)}mm</div>
-                <div>💨 Wind: {environment.wind} km/h</div>
+                <div>💧 {t('liveEnvironment.humidity', language)}: {environment.humidity}%</div>
+                <div>🌧️ {t('liveEnvironment.rain', language)}: {environment.rainfall.toFixed(1)}mm</div>
+                <div>💨 {t('liveEnvironment.wind', language)}: {environment.wind} km/h</div>
               </div>
             </div>
           </motion.div>
@@ -429,7 +432,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-2xl">💨</span>
                 <div>
-                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">Oxygen Level</div>
+                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">{t('liveEnvironment.oxygenLevel', language)}</div>
                   <div className="font-bold text-lg">
                     <AnimatedNumber value={environment.oxygenLevel} />%
                   </div>
@@ -437,10 +440,10 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               </div>
               <div className="text-xs mt-2">
                 {environment.oxygenLevel >= 75
-                  ? '✅ Healthy'
+                  ? `✅ ${t('liveEnvironment.healthy', language)}`
                   : environment.oxygenLevel >= 60
-                  ? '⚠️ Moderate'
-                  : '❌ Low'}
+                  ? `⚠️ ${t('liveEnvironment.moderate', language)}`
+                  : `❌ ${t('liveEnvironment.low', language)}`}
               </div>
             </div>
           </motion.div>
@@ -459,7 +462,7 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-2xl">🌿</span>
                 <div>
-                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">Greenery Index</div>
+                  <div className="text-xs text-gray-600 dark:text-chalk-secondary">{t('liveEnvironment.greeneryIndex', language)}</div>
                   <div className="font-bold text-lg">
                     <AnimatedNumber value={environment.greeneryIndex} />%
                   </div>
@@ -467,10 +470,10 @@ export default function LiveEnvironmentPanel({ onEnvironmentChange }) {
               </div>
               <div className="text-xs mt-2">
                 {environment.greeneryIndex >= 60
-                  ? '✅ High'
+                  ? `✅ ${t('liveEnvironment.high', language)}`
                   : environment.greeneryIndex >= 40
-                  ? '⚠️ Moderate'
-                  : '❌ Low'}
+                  ? `⚠️ ${t('liveEnvironment.moderate', language)}`
+                  : `❌ ${t('liveEnvironment.low', language)}`}
               </div>
             </div>
           </motion.div>

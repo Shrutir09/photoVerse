@@ -6,19 +6,11 @@ import AnimatedFormula from '../components/AnimatedFormula'
 import PhotosynthesisProcess from '../components/PhotosynthesisProcess'
 import ActivityCards from '../components/ActivityCards'
 import Footer from '../components/Footer'
-import { useState, useEffect } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function LearnPage() {
-  const [language, setLanguage] = useState('en')
-
-  useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved) setLanguage(saved)
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('language', language)
-  }, [language])
+  const { language } = useTranslation()
 
   return (
     <ProtectedRoute>
@@ -27,31 +19,31 @@ export default function LearnPage() {
           {/* Header */}
           <div className="text-center mb-8 md:mb-12">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-4 md:mb-6">
-              🧬 Photosynthesis & Environment Learning Hub
+              {t('learn.title', language)}
             </h1>
             <p className="text-lg md:text-xl text-gray-700 dark:text-chalk-secondary max-w-3xl mx-auto">
-              An interactive science lab to understand how plants, air, and ecosystems work
+              {t('learn.subtitle', language)}
             </p>
           </div>
 
           {/* Section 1: Articles & Reading */}
           <section>
-            <ArticleCards language={language} />
+            <ArticleCards />
           </section>
 
           {/* Section 2: Animated Photosynthesis Formula */}
           <section>
-            <AnimatedFormula language={language} />
+            <AnimatedFormula />
           </section>
 
           {/* Section 3: Photosynthesis Process */}
           <section>
-            <PhotosynthesisProcess language={language} />
+            <PhotosynthesisProcess />
           </section>
 
           {/* Section 4: Activities & Experiments */}
           <section>
-            <ActivityCards language={language} />
+            <ActivityCards />
           </section>
         </div>
       </div>

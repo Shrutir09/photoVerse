@@ -4,8 +4,11 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Confetti from './Confetti'
 import { playApplause, playSuccessSound } from '../utils/sounds'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function GameBalance({ sunlight, co2, temperature, onSunlightChange, onCo2Change, onTemperatureChange, photosynthesisRate, onGameWon }) {
+  const { language } = useTranslation()
   const [gameStarted, setGameStarted] = useState(false)
   const [gameWon, setGameWon] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState(0)
@@ -80,10 +83,10 @@ export default function GameBalance({ sunlight, co2, temperature, onSunlightChan
             </motion.div>
             <div className="flex-1">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-chalk-white mb-2">
-                Balance the Earth
+                {t('games.balanceEarth', language)}
               </h2>
               <p className="text-gray-600 dark:text-chalk-secondary text-sm md:text-base leading-relaxed">
-                Master the art of environmental balance! Adjust sunlight, CO₂, and temperature sliders to achieve a photosynthesis rate between <span className="font-bold text-green-600 dark:text-chalk-emerald">70-75%</span>.
+                {t('games.balanceEarthDescription', language)}
               </p>
             </div>
           </div>
@@ -99,9 +102,9 @@ export default function GameBalance({ sunlight, co2, temperature, onSunlightChan
               <div className="flex items-start gap-3">
                 <div className="text-2xl">🎯</div>
                 <div>
-                  <h3 className="font-bold text-gray-800 dark:text-chalk-white mb-1">Your Mission</h3>
+                  <h3 className="font-bold text-gray-800 dark:text-chalk-white mb-1">{t('games.yourMission', language)}</h3>
                   <p className="text-sm text-gray-600 dark:text-chalk-secondary">
-                    Use the Environment Stats panel to fine-tune conditions. Find the perfect balance where photosynthesis thrives!
+                    {t('games.balanceEarthDescription', language)}
                   </p>
                 </div>
               </div>
@@ -115,7 +118,7 @@ export default function GameBalance({ sunlight, co2, temperature, onSunlightChan
           whileHover={{ y: -2, scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          Start Game
+          {t('games.startGame', language)}
         </motion.button>
       ) : (
         <div className="space-y-6 flex-grow flex flex-col">
@@ -158,13 +161,17 @@ export default function GameBalance({ sunlight, co2, temperature, onSunlightChan
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.2 }}
                   >
-                    Success!
+                    {t('games.success', language)}!
                   </motion.div>
                   <div className="text-lg text-gray-700 dark:text-chalk-white mb-2">
-                    You balanced the Earth in <span className="font-bold text-green-700 dark:text-chalk-emerald">{timeElapsed} seconds</span>!
+                    {language === 'hi' 
+                      ? `आपने ${timeElapsed} सेकंड में पृथ्वी को संतुलित किया!`
+                      : `You balanced the Earth in ${timeElapsed} seconds!`}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-chalk-secondary">
-                    +10 Points earned! Check your badges below.
+                    {language === 'hi' 
+                      ? '+10 अंक अर्जित किए! नीचे अपने बैज देखें।'
+                      : '+10 Points earned! Check your badges below.'}
                   </div>
                 </div>
               </motion.div>
@@ -177,7 +184,7 @@ export default function GameBalance({ sunlight, co2, temperature, onSunlightChan
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Reset Game
+            {t('games.reset', language)}
           </motion.button>
         </div>
           )}

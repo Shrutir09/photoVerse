@@ -2,61 +2,29 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function PhotosynthesisProcess({ language = 'en' }) {
+export default function PhotosynthesisProcess() {
+  const { language } = useTranslation()
   const [activeStep, setActiveStep] = useState(null)
 
-  const translations = {
-    en: {
-      title: 'Photosynthesis Process',
-      subtitle: 'Visual guide to understanding how photosynthesis works',
-      sunlight: 'Sunlight',
-      co2: 'CO₂ enters leaf',
-      water: 'Water from roots',
-      glucose: 'Glucose created',
-      oxygen: 'Oxygen released',
-      step1: 'Sunlight provides energy',
-      step2: 'CO₂ enters through stomata',
-      step3: 'Water flows from roots',
-      step4: 'Photosynthesis occurs',
-      step5: 'Glucose is produced',
-      step6: 'Oxygen is released',
-    },
-    hi: {
-      title: 'प्रकाश संश्लेषण प्रक्रिया',
-      subtitle: 'प्रकाश संश्लेषण कैसे काम करता है इसे समझने के लिए दृश्य गाइड',
-      sunlight: 'सूरज की रोशनी',
-      co2: 'CO₂ पत्ती में प्रवेश करता है',
-      water: 'जड़ों से पानी',
-      glucose: 'ग्लूकोज बनता है',
-      oxygen: 'ऑक्सीजन निकलती है',
-      step1: 'सूरज की रोशनी ऊर्जा प्रदान करती है',
-      step2: 'CO₂ स्टोमाटा के माध्यम से प्रवेश करता है',
-      step3: 'पानी जड़ों से बहता है',
-      step4: 'प्रकाश संश्लेषण होता है',
-      step5: 'ग्लूकोज उत्पन्न होता है',
-      step6: 'ऑक्सीजन निकलती है',
-    },
-  }
-
-  const t = translations[language] || translations.en
-
   const steps = [
-    { id: 1, icon: '☀️', label: t.sunlight, description: t.step1, color: 'from-yellow-400 to-orange-400' },
-    { id: 2, icon: '🌬', label: t.co2, description: t.step2, color: 'from-gray-500 to-gray-600' },
-    { id: 3, icon: '💧', label: t.water, description: t.step3, color: 'from-blue-400 to-cyan-400' },
-    { id: 4, icon: '🌱', label: 'Photosynthesis', description: t.step4, color: 'from-green-400 to-emerald-400' },
-    { id: 5, icon: '🍞', label: t.glucose, description: t.step5, color: 'from-yellow-500 to-amber-500' },
-    { id: 6, icon: '💨', label: t.oxygen, description: t.step6, color: 'from-blue-500 to-cyan-500' },
+    { id: 1, icon: '☀️', labelKey: 'photosynthesisProcess.sunlight', descriptionKey: 'photosynthesisProcess.step1', color: 'from-yellow-400 to-orange-400' },
+    { id: 2, icon: '🌬', labelKey: 'photosynthesisProcess.co2', descriptionKey: 'photosynthesisProcess.step2', color: 'from-gray-500 to-gray-600' },
+    { id: 3, icon: '💧', labelKey: 'photosynthesisProcess.water', descriptionKey: 'photosynthesisProcess.step3', color: 'from-blue-400 to-cyan-400' },
+    { id: 4, icon: '🌱', labelKey: 'photosynthesisProcess.photosynthesis', descriptionKey: 'photosynthesisProcess.step4', color: 'from-green-400 to-emerald-400' },
+    { id: 5, icon: '🍞', labelKey: 'photosynthesisProcess.glucose', descriptionKey: 'photosynthesisProcess.step5', color: 'from-yellow-500 to-amber-500' },
+    { id: 6, icon: '💨', labelKey: 'photosynthesisProcess.oxygen', descriptionKey: 'photosynthesisProcess.step6', color: 'from-blue-500 to-cyan-500' },
   ]
 
   return (
     <div className="space-y-6">
       <div className="text-center md:text-left">
         <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-2">
-          🔬 {t.title}
+          🔬 {t('photosynthesisProcess.title', language)}
         </h2>
-        <p className="text-gray-600 dark:text-chalk-secondary">{t.subtitle}</p>
+        <p className="text-gray-600 dark:text-chalk-secondary">{t('photosynthesisProcess.subtitle', language)}</p>
       </div>
 
       <div className="glass rounded-3xl p-6 md:p-8 border-2 border-emerald-500/20 shadow-xl relative overflow-hidden">
@@ -109,7 +77,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-yellow-400/90 text-yellow-900 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                 >
-                  {t.step1}
+                  {t('photosynthesisProcess.step1', language)}
                 </motion.div>
               )}
             </motion.div>
@@ -139,7 +107,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-gray-500/90 text-white px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                 >
-                  {t.step2}
+                  {t('photosynthesisProcess.step2', language)}
                 </motion.div>
               )}
             </motion.div>
@@ -169,7 +137,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-blue-400/90 text-white px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                 >
-                  {t.step3}
+                  {t('photosynthesisProcess.step3', language)}
                 </motion.div>
               )}
             </motion.div>
@@ -191,7 +159,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
               onMouseLeave={() => setActiveStep(null)}
             >
               <div className="bg-yellow-400/90 text-yellow-900 px-3 py-2 rounded-full text-sm font-bold shadow-lg backdrop-blur-sm">
-                🍞 Glucose
+                🍞 {language === 'hi' ? 'ग्लूकोज' : 'Glucose'}
               </div>
               {activeStep === 5 && (
                 <motion.div
@@ -199,7 +167,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                   animate={{ opacity: 1, y: 0 }}
                   className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-yellow-400/90 text-yellow-900 px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                 >
-                  {t.step5}
+                  {t('photosynthesisProcess.step5', language)}
                 </motion.div>
               )}
             </motion.div>
@@ -233,7 +201,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                     animate={{ opacity: 1, y: 0 }}
                     className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 bg-blue-400/90 text-white px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap"
                   >
-                    {t.step6}
+                    {t('photosynthesisProcess.step6', language)}
                   </motion.div>
                 )}
               </motion.div>
@@ -257,7 +225,7 @@ export default function PhotosynthesisProcess({ language = 'en' }) {
                     {step.icon}
                   </div>
                   <div className="text-xs font-semibold text-gray-700 dark:text-chalk-secondary">
-                    {step.label}
+                    {t(step.labelKey, language)}
                   </div>
                 </div>
               </motion.div>

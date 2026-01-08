@@ -5,8 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import ProtectedRoute from '../components/ProtectedRoute'
 import { useAuth } from '../context/AuthContext'
 import Footer from '../components/Footer'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function MyPlantPage() {
+  const { language } = useTranslation()
   const { user } = useAuth()
   const [checklist, setChecklist] = useState({
     planted: false,
@@ -157,27 +160,21 @@ export default function MyPlantPage() {
   useEffect(() => {
     const completedCount = Object.values(checklist).filter(Boolean).length
     
-    let health = 'Wilting'
-    if (completedCount === 2) health = 'Weak'
-    else if (completedCount === 3) health = 'Healthy'
-    else if (completedCount === 4) health = 'Thriving'
+    let healthKey = 'wilting'
+    if (completedCount === 2) healthKey = 'weak'
+    else if (completedCount === 3) healthKey = 'healthy'
+    else if (completedCount === 4) healthKey = 'thriving'
     
-    setPlantHealth(health)
+    setPlantHealth(healthKey)
 
     // Set motivational message
-    let message = ''
-    if (completedCount === 0) {
-      message = 'Your plant needs care today 🌱'
-    } else if (completedCount === 1) {
-      message = 'Your plant needs more attention ☀️'
-    } else if (completedCount === 2) {
-      message = 'Your plant is getting better! Keep going 💧'
-    } else if (completedCount === 3) {
-      message = 'Your plant is happy today 🌱'
-    } else if (completedCount === 4) {
-      message = 'Your plant is thriving! Amazing work 🌟'
-    }
-    setMotivationalMessage(message)
+    let messageKey = 'needsCare'
+    if (completedCount === 1) messageKey = 'needsAttention'
+    else if (completedCount === 2) messageKey = 'gettingBetter'
+    else if (completedCount === 3) messageKey = 'happy'
+    else if (completedCount === 4) messageKey = 'thrivingMessage'
+    
+    setMotivationalMessage(t(`myPlant.${messageKey}`, language))
 
     // Save to localStorage (but don't update streak here - that's handled in separate effect)
     if (user) {
@@ -312,13 +309,13 @@ export default function MyPlantPage() {
   // Get plant emoji based on health
   const getPlantEmoji = () => {
     switch (plantHealth) {
-      case 'Thriving':
+      case 'thriving':
         return '🌳'
-      case 'Healthy':
+      case 'healthy':
         return '🌿'
-      case 'Weak':
+      case 'weak':
         return '🌱'
-      case 'Wilting':
+      case 'wilting':
       default:
         return '🍂'
     }
@@ -327,23 +324,23 @@ export default function MyPlantPage() {
   // Get plant size based on health
   const getPlantSize = () => {
     switch (plantHealth) {
-      case 'Thriving':
+      case 'thriving':
         return 'text-[12rem] md:text-[16rem]'
-      case 'Healthy':
+      case 'healthy':
         return 'text-[10rem] md:text-[14rem]'
-      case 'Weak':
+      case 'weak':
         return 'text-[8rem] md:text-[12rem]'
-      case 'Wilting':
+      case 'wilting':
       default:
         return 'text-[6rem] md:text-[10rem]'
     }
   }
 
   const tasks = [
-    { key: 'planted', icon: '🌱', label: 'Plant Planted' },
-    { key: 'sunlight', icon: '☀️', label: 'Sunlight Given' },
-    { key: 'watered', icon: '💧', label: 'Watered Today' },
-    { key: 'growthCheck', icon: '🌿', label: 'Growth Check' },
+    { key: 'planted', icon: '🌱', labelKey: 'myPlant.plantPlanted' },
+    { key: 'sunlight', icon: '☀️', labelKey: 'myPlant.sunlightGiven' },
+    { key: 'watered', icon: '💧', labelKey: 'myPlant.wateredToday' },
+    { key: 'growthCheck', icon: '🌿', labelKey: 'myPlant.growthCheck' },
   ]
 
   return (
@@ -358,10 +355,10 @@ export default function MyPlantPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 bg-clip-text text-transparent mb-4 md:mb-6 font-sans">
-              🌱 My Plant Dashboard
+              {t('myPlant.title', language)}
             </h1>
             <p className="text-lg md:text-xl text-gray-500 dark:text-chalk-secondary max-w-2xl mx-auto">
-              Take care of your plant daily and watch it thrive!
+              {t('myPlant.subtitle', language)}
             </p>
           </motion.div>
 
@@ -384,8 +381,8 @@ export default function MyPlantPage() {
                   <motion.div
                     className={`${getPlantSize()} mb-6 md:mb-8 inline-block`}
                     animate={{
-                      scale: plantHealth === 'Thriving' ? [1, 1.05, 1] : [1, 1.02, 1],
-                      y: plantHealth === 'Thriving' ? [0, -5, 0] : [0, -2, 0],
+                      scale: plantHealth === 'thriving' ? [1, 1.05, 1] : [1, 1.02, 1],
+                      y: plantHealth === 'thriving' ? [0, -5, 0] : [0, -2, 0],
                     }}
                     transition={{
                       duration: 3,
@@ -393,9 +390,9 @@ export default function MyPlantPage() {
                       ease: "easeInOut"
                     }}
                     style={{
-                      filter: plantHealth === 'Wilting' ? 'grayscale(0.5) brightness(0.7)' : 
-                              plantHealth === 'Weak' ? 'grayscale(0.2) brightness(0.85)' :
-                              plantHealth === 'Healthy' ? 'brightness(1)' : 'brightness(1.1)',
+                      filter: plantHealth === 'wilting' ? 'grayscale(0.5) brightness(0.7)' : 
+                              plantHealth === 'weak' ? 'grayscale(0.2) brightness(0.85)' :
+                              plantHealth === 'healthy' ? 'brightness(1)' : 'brightness(1.1)',
                     }}
                   >
                     {getPlantEmoji()}
@@ -409,12 +406,12 @@ export default function MyPlantPage() {
                     transition={{ duration: 0.5, delay: 0.3 }}
                   >
                     <div className={`inline-block px-6 py-3 rounded-full font-bold text-lg md:text-xl ${
-                      plantHealth === 'Thriving' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white dark:from-chalk-emerald dark:to-chalk-emerald' :
-                      plantHealth === 'Healthy' ? 'bg-gradient-to-r from-emerald-400 to-green-400 text-white dark:from-emerald-500 dark:to-green-500' :
-                      plantHealth === 'Weak' ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white' :
+                      plantHealth === 'thriving' ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white dark:from-chalk-emerald dark:to-chalk-emerald' :
+                      plantHealth === 'healthy' ? 'bg-gradient-to-r from-emerald-400 to-green-400 text-white dark:from-emerald-500 dark:to-green-500' :
+                      plantHealth === 'weak' ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white' :
                       'bg-gradient-to-r from-red-400 to-orange-400 text-white'
                     }`}>
-                      {plantHealth}
+                      {t(`myPlant.${plantHealth}`, language)}
                     </div>
                   </motion.div>
 
@@ -436,7 +433,7 @@ export default function MyPlantPage() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.5, delay: 0.5 }}
                     >
-                      🔥 {careStreak}-day care streak
+                      🔥 {careStreak} {t('myPlant.careStreak', language)}
                     </motion.div>
                   )}
                 </div>
@@ -451,7 +448,7 @@ export default function MyPlantPage() {
             >
               <div className="glass rounded-3xl p-6 md:p-8 bg-white/90 dark:bg-chalkboard-surface shadow-xl h-full">
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-chalk-white mb-6 text-center">
-                  Daily Care Checklist
+                  {t('myPlant.dailyCare', language)}
                 </h2>
 
                 <div className="space-y-4">
@@ -485,7 +482,7 @@ export default function MyPlantPage() {
                                 ? 'text-gray-800 dark:text-chalk-white'
                                 : 'text-gray-600 dark:text-chalk-secondary'
                             }`}>
-                              {task.label}
+                              {t(task.labelKey, language)}
                             </div>
                           </div>
                           {checklist[task.key] && (
@@ -507,7 +504,7 @@ export default function MyPlantPage() {
                 <div className="mt-6 pt-6 border-t border-gray-200 dark:border-chalk-border/30">
                   <div className="text-center">
                     <div className="text-sm text-gray-600 dark:text-chalk-secondary mb-2">
-                      Today's Progress
+                      {t('myPlant.todayProgress', language)}
                     </div>
                     <div className="text-3xl font-bold text-green-600 dark:text-chalk-emerald">
                       {Object.values(checklist).filter(Boolean).length} / 4

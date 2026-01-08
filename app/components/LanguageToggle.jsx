@@ -23,7 +23,7 @@ export default function LanguageToggle({ language, onLanguageChange }) {
       className="glass rounded-full p-2.5 text-xl font-bold hover:bg-green-500/10 transition-colors min-w-[3rem] flex items-center justify-center"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      title={isEnglish ? 'Switch to Hindi' : 'Switch to English'}
+      title={isEnglish ? 'हिंदी में बदलें' : 'Switch to English'}
     >
       {isEnglish ? 'A' : 'अ'}
     </motion.button>

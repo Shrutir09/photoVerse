@@ -2,8 +2,11 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function Sliders({ sunlight, co2, temperature, onSunlightChange, onCo2Change, onTemperatureChange }) {
+  const { language } = useTranslation()
   const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
@@ -34,10 +37,10 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
     >
       <div className="text-center mb-3 flex-shrink-0">
         <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-chalk-white mb-0.5 leading-tight">
-          Environment Stats
+          {t('charts.environmentStats', language)}
         </h3>
         <p className="text-[10px] md:text-xs text-gray-500 dark:text-chalk-secondary leading-tight">
-          Adjust parameters
+          {t('sliders.adjust', language)}
         </p>
       </div>
 
@@ -48,7 +51,7 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-400/20 to-orange-400/20 dark:from-yellow-500/30 dark:to-orange-500/30 flex items-center justify-center flex-shrink-0">
               <span className="text-base md:text-lg">🌞</span>
             </div>
-            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">Sunlight</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">{t('sliders.sunlight', language)}</span>
           </div>
           <span className="text-base md:text-lg font-semibold text-yellow-600 dark:text-chalk-yellow flex-shrink-0">
             {sunlight}%
@@ -72,7 +75,7 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-400/20 to-emerald-400/20 dark:from-green-500/30 dark:to-emerald-500/30 flex items-center justify-center flex-shrink-0">
               <span className="text-base md:text-lg">🌬</span>
             </div>
-            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">CO₂ Level</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">{t('sliders.co2', language)}</span>
           </div>
           <span className="text-base md:text-lg font-semibold text-green-600 dark:text-chalk-emerald flex-shrink-0">
             {co2}%
@@ -96,7 +99,7 @@ export default function Sliders({ sunlight, co2, temperature, onSunlightChange, 
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400/20 to-red-400/20 dark:from-orange-500/30 dark:to-red-500/30 flex items-center justify-center flex-shrink-0">
               <span className="text-base md:text-lg">🌡️</span>
             </div>
-            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">Temperature</span>
+            <span className="font-semibold text-sm md:text-base text-gray-800 dark:text-chalk-white truncate">{t('sliders.temperature', language)}</span>
           </div>
           <span className="text-base md:text-lg font-semibold text-orange-600 dark:text-orange-400 flex-shrink-0 whitespace-nowrap">
             {temperature}°C

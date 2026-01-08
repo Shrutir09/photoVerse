@@ -7,8 +7,11 @@ import { calculateAll } from '../logic/photosynthesis'
 import Charts from '../components/Charts'
 import Sliders from '../components/Sliders'
 import Footer from '../components/Footer'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function ChartsPage() {
+  const { language } = useTranslation()
   const [sunlight, setSunlight] = useState(50)
   const [co2, setCo2] = useState(50)
   const [temperature, setTemperature] = useState(25)
@@ -53,10 +56,10 @@ export default function ChartsPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 bg-clip-text text-transparent mb-3 md:mb-4 font-sans">
-              📊 Analytics Dashboard
+              📊 {t('charts.title', language)}
             </h1>
             <p className="text-base md:text-lg text-gray-500 dark:text-chalk-secondary max-w-2xl mx-auto">
-              Real-time visualization of photosynthesis data and environmental metrics
+              {t('charts.title', language)}
             </p>
           </motion.div>
 

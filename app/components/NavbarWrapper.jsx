@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
 import Navbar from './Navbar'
 
 export default function NavbarWrapper() {
   const [darkMode, setDarkMode] = useState(false)
-  const [language, setLanguage] = useState('en')
+  const { language, setLanguage } = useTranslation()
   const { user } = useAuth()
   const pathname = usePathname()
 
@@ -22,10 +23,6 @@ export default function NavbarWrapper() {
       document.documentElement.classList.add('dark')
     }
 
-    const savedLanguage = localStorage.getItem('language')
-    if (savedLanguage) {
-      setLanguage(savedLanguage)
-    }
   }, [])
 
   useEffect(() => {
@@ -37,10 +34,6 @@ export default function NavbarWrapper() {
       localStorage.setItem('darkMode', 'false')
     }
   }, [darkMode])
-
-  useEffect(() => {
-    localStorage.setItem('language', language)
-  }, [language])
 
   if (hideNavbar) {
     return null

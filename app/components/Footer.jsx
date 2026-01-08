@@ -3,8 +3,11 @@
 import Link from 'next/link'
 import Logo from './Logo'
 import { motion } from 'framer-motion'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function Footer() {
+  const { language } = useTranslation()
   return (
     <footer className="mt-20 relative">
       {/* Top Divider */}
@@ -22,10 +25,10 @@ export default function Footer() {
                 <span className="text-2xl md:text-3xl font-bold text-white dark:text-chalk-white">PHOTOSPHERE</span>
               </div>
               <p className="text-green-100 dark:text-chalk-secondary text-sm font-medium leading-tight">
-                Where Sunlight Becomes Life
+                {t('footer.tagline', language)}
               </p>
               <p className="text-green-200 dark:text-chalk-secondary/70 text-xs leading-tight">
-                AI-Powered Photosynthesis & Environment Simulator
+                {t('footer.description', language)}
               </p>
               <a
                 href="https://github.com/Shrutir09/photoVerse"
@@ -43,13 +46,13 @@ export default function Footer() {
 
             {/* Column 2: Quick Links */}
             <div>
-              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">Quick Links</h3>
+              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">{t('footer.quickLinks', language)}</h3>
               <ul className="space-y-2">
                 {[
-                  { href: '/', label: 'Home', icon: '🏠' },
-                  { href: '/learn', label: 'Learning Center', icon: '📚' },
-                  { href: '/games', label: 'Educational Games', icon: '🎮' },
-                  { href: '/charts', label: 'Data Charts', icon: '📊' },
+                  { href: '/', labelKey: 'navbar.home', icon: '🏠' },
+                  { href: '/learn', labelKey: 'footer.learningCenter', icon: '📚' },
+                  { href: '/games', labelKey: 'footer.educationalGames', icon: '🎮' },
+                  { href: '/charts', labelKey: 'footer.dataCharts', icon: '📊' },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -58,7 +61,7 @@ export default function Footer() {
                     >
                       <span className="text-base opacity-80 dark:opacity-70">{link.icon}</span>
                       <span className="relative">
-                        {link.label}
+                        {t(link.labelKey, language)}
                         <motion.span
                           className="absolute bottom-0 left-0 w-0 h-px bg-green-400 dark:bg-chalk-border/40 group-hover:w-full transition-all duration-300"
                         />
@@ -71,12 +74,12 @@ export default function Footer() {
 
             {/* Column 3: Resources */}
             <div>
-              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">Resources</h3>
+              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">{t('footer.resources', language)}</h3>
               <ul className="space-y-2">
                 {[
-                  { href: '/about', label: 'About Us', icon: 'ℹ️' },
-                  { href: '/help', label: 'Help & Support', icon: '❓' },
-                  { href: '/privacy', label: 'Privacy Policy', icon: '🔒' },
+                  { href: '/about', labelKey: 'footer.aboutUs', icon: 'ℹ️' },
+                  { href: '/help', labelKey: 'footer.helpSupport', icon: '❓' },
+                  { href: '/privacy', labelKey: 'footer.privacyPolicy', icon: '🔒' },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link
@@ -85,7 +88,7 @@ export default function Footer() {
                     >
                       <span className="text-base opacity-80 dark:opacity-70">{link.icon}</span>
                       <span className="relative">
-                        {link.label}
+                        {t(link.labelKey, language)}
                         <motion.span
                           className="absolute bottom-0 left-0 w-0 h-px bg-green-400 dark:bg-chalk-border/40 group-hover:w-full transition-all duration-300"
                         />
@@ -98,7 +101,7 @@ export default function Footer() {
 
             {/* Column 4: Contact & Socials */}
             <div>
-              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">Contact Us</h3>
+              <h3 className="font-semibold text-base mb-3 text-white dark:text-chalk-white">{t('footer.contactUs', language)}</h3>
               <div className="space-y-2 mb-4">
                 <a
                   href="mailto:support@photosphere.app"
@@ -128,7 +131,7 @@ export default function Footer() {
 
               {/* Social Media */}
               <div>
-                <h4 className="font-medium text-sm mb-2 text-white dark:text-chalk-white">Follow Us</h4>
+                <h4 className="font-medium text-sm mb-2 text-white dark:text-chalk-white">{t('footer.followUs', language)}</h4>
                 <div className="flex flex-wrap gap-3">
                   {/* Facebook */}
                   <motion.a
@@ -190,7 +193,7 @@ export default function Footer() {
           <div className="pt-4 border-t border-green-500/30 dark:border-t dark:border-chalk-border/15">
             <div className="flex flex-col md:flex-row items-center justify-center gap-1">
               <p className="text-green-100 dark:text-chalk-secondary/60 text-xs text-center">
-                © {new Date().getFullYear()} PHOTOSPHERE. All rights reserved.
+                © {new Date().getFullYear()} PHOTOSPHERE. {t('footer.allRightsReserved', language)}
               </p>
             </div>
           </div>

@@ -2,39 +2,13 @@
 
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function AnimatedFormula({ language = 'en' }) {
+export default function AnimatedFormula() {
+  const { language } = useTranslation()
   const [step, setStep] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
-
-  const translations = {
-    en: {
-      title: 'Animated Photosynthesis Formula',
-      formula: 'CO₂ + H₂O + Sunlight → Glucose + O₂',
-      step1: 'CO₂ enters the leaf',
-      step2: 'Water flows from roots',
-      step3: 'Sunlight hits the leaf',
-      step4: 'Photosynthesis occurs',
-      step5: 'Glucose is produced',
-      step6: 'Oxygen is released',
-      play: 'Play Animation',
-      reset: 'Reset',
-    },
-    hi: {
-      title: 'एनिमेटेड प्रकाश संश्लेषण सूत्र',
-      formula: 'CO₂ + H₂O + सूरज की रोशनी → ग्लूकोज + O₂',
-      step1: 'CO₂ पत्ती में प्रवेश करता है',
-      step2: 'पानी जड़ों से बहता है',
-      step3: 'सूरज की रोशनी पत्ती पर पड़ती है',
-      step4: 'प्रकाश संश्लेषण होता है',
-      step5: 'ग्लूकोज उत्पन्न होता है',
-      step6: 'ऑक्सीजन निकलती है',
-      play: 'एनिमेशन चलाएं',
-      reset: 'रीसेट',
-    },
-  }
-
-  const t = translations[language] || translations.en
 
   useEffect(() => {
     if (!isPlaying) return
@@ -66,9 +40,9 @@ export default function AnimatedFormula({ language = 'en' }) {
     <div className="space-y-6">
       <div className="text-center md:text-left">
         <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-2">
-          ⚗️ {t.title}
+          ⚗️ {t('animatedFormula.title', language)}
         </h2>
-        <p className="text-gray-600 dark:text-chalk-secondary mb-4">{t.formula}</p>
+        <p className="text-gray-600 dark:text-chalk-secondary mb-4">{t('animatedFormula.formula', language)}</p>
       </div>
 
       <div className="glass rounded-3xl p-8 md:p-12 border-2 border-emerald-500/20 shadow-xl relative overflow-hidden">
@@ -85,7 +59,7 @@ export default function AnimatedFormula({ language = 'en' }) {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-semibold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              ▶️ {t.play}
+              ▶️ {t('animatedFormula.play', language)}
             </motion.button>
             <motion.button
               onClick={handleReset}
@@ -93,7 +67,7 @@ export default function AnimatedFormula({ language = 'en' }) {
               whileTap={{ scale: 0.95 }}
               className="px-6 py-3 glass border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold rounded-xl"
             >
-              🔄 {t.reset}
+              🔄 {t('animatedFormula.reset', language)}
             </motion.button>
           </div>
 
@@ -221,7 +195,7 @@ export default function AnimatedFormula({ language = 'en' }) {
                 transition={{ duration: 1.5 }}
               >
                 <div className="bg-yellow-400/90 text-yellow-900 px-4 py-3 rounded-full text-base font-bold shadow-xl backdrop-blur-sm">
-                  🍞 Glucose
+                  🍞 {language === 'hi' ? 'ग्लूकोज' : 'Glucose'}
                 </div>
               </motion.div>
             )}
@@ -257,7 +231,7 @@ export default function AnimatedFormula({ language = 'en' }) {
                 animate={{ opacity: 1, y: 0 }}
                 className="absolute top-4 left-4 bg-emerald-500/90 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg backdrop-blur-sm"
               >
-                {t[`step${step + 1}`]}
+                {t(`animatedFormula.step${step + 1}`, language)}
               </motion.div>
             )}
           </div>

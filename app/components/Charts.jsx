@@ -3,8 +3,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function Charts({ dataHistory, currentData, sunlight, co2, temperature }) {
+  const { language } = useTranslation()
   const [isAnimating, setIsAnimating] = useState(true)
 
   useEffect(() => {
@@ -33,16 +36,16 @@ export default function Charts({ dataHistory, currentData, sunlight, co2, temper
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-chalk-white leading-tight">
-                Oxygen Production
+                {t('charts.oxygenProduction', language)}
               </h3>
               <p className="text-xs text-gray-500 dark:text-chalk-secondary mt-0.5 leading-relaxed">
-                Real-time oxygen generation over time
+                {t('charts.oxygenProduction', language)}
               </p>
             </div>
           </div>
           <div className="flex-shrink-0">
             <div className="px-3 py-1.5 bg-gray-50 dark:bg-chalkboard-bg/50 rounded-lg border border-gray-200 dark:border-chalk-border/30">
-              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">Current</div>
+              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">{t('charts.current', language)}</div>
               <div className="text-lg font-semibold text-gray-700 dark:text-chalk-white">
                 {currentOxygen.toFixed(1)}%
               </div>
@@ -129,16 +132,16 @@ export default function Charts({ dataHistory, currentData, sunlight, co2, temper
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="text-lg md:text-xl font-semibold text-gray-800 dark:text-chalk-white leading-tight">
-                Photosynthesis Rate
+                {t('charts.photosynthesisRate', language)}
               </h3>
               <p className="text-xs text-gray-500 dark:text-chalk-secondary mt-0.5 leading-relaxed">
-                Efficiency of the photosynthesis process
+                {language === 'hi' ? 'प्रकाश संश्लेषण प्रक्रिया की दक्षता' : 'Efficiency of the photosynthesis process'}
               </p>
             </div>
           </div>
           <div className="flex-shrink-0">
             <div className="px-3 py-1.5 bg-gray-50 dark:bg-chalkboard-bg/50 rounded-lg border border-gray-200 dark:border-chalk-border/30">
-              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">Current</div>
+              <div className="text-[10px] text-gray-400 dark:text-chalk-secondary mb-0.5">{t('charts.current', language)}</div>
               <div className="text-lg font-semibold text-gray-700 dark:text-chalk-white">
                 {currentRate.toFixed(1)}%
               </div>

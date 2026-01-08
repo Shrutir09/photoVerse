@@ -3,43 +3,27 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { askPhotoBot, fallbackResponses } from '../ai/photobot'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function PhotoBot({ language = 'en' }) {
+export default function PhotoBot() {
+  const { language } = useTranslation()
   const [question, setQuestion] = useState('')
   const [answer, setAnswer] = useState('')
   const [loading, setLoading] = useState(false)
   const [apiKey, setApiKey] = useState(process.env.NEXT_PUBLIC_OPENAI_API_KEY || '')
 
-  const translations = {
-    en: {
-      title: '🤖🌱 PhotoBot - Your AI Tutor',
-      placeholder: 'Ask me about photosynthesis...',
-      askButton: 'Ask PhotoBot',
-      exampleQuestions: 'Example Questions:',
-      examples: [
-        'How does photosynthesis work?',
-        'Why do plants need sunlight?',
-        'What happens if CO₂ is high?',
-        'How do plants make food?',
-      ],
-      apiKeyPlaceholder: 'OpenAI API Key (optional)',
-    },
-    hi: {
-      title: '🤖🌱 PhotoBot - आपका AI ट्यूटर',
-      placeholder: 'मुझसे प्रकाश संश्लेषण के बारे में पूछें...',
-      askButton: 'PhotoBot से पूछें',
-      exampleQuestions: 'उदाहरण प्रश्न:',
-      examples: [
-        'प्रकाश संश्लेषण कैसे काम करता है?',
-        'पौधों को सूरज की रोशनी की आवश्यकता क्यों है?',
-        'यदि CO₂ अधिक है तो क्या होता है?',
-        'पौधे भोजन कैसे बनाते हैं?',
-      ],
-      apiKeyPlaceholder: 'OpenAI API Key (वैकल्पिक)',
-    },
-  }
-
-  const t = translations[language] || translations.en
+  const examples = language === 'hi' ? [
+    'प्रकाश संश्लेषण कैसे काम करता है?',
+    'पौधों को सूरज की रोशनी की आवश्यकता क्यों है?',
+    'यदि CO₂ अधिक है तो क्या होता है?',
+    'पौधे भोजन कैसे बनाते हैं?',
+  ] : [
+    'How does photosynthesis work?',
+    'Why do plants need sunlight?',
+    'What happens if CO₂ is high?',
+    'How do plants make food?',
+  ]
 
   const handleAsk = async () => {
     if (!question.trim()) return
@@ -66,7 +50,9 @@ export default function PhotoBot({ language = 'en' }) {
         const result = await askPhotoBot(question, apiKey)
         setAnswer(result.answer)
       } else {
-        setAnswer("I'd love to help! Please add your OpenAI API key above to get detailed answers, or try one of the example questions for a quick answer.")
+        setAnswer(language === 'hi' 
+          ? "मैं मदद करना चाहूंगा! विस्तृत उत्तर पाने के लिए कृपया ऊपर अपनी OpenAI API key जोड़ें, या त्वरित उत्तर के लिए उदाहरण प्रश्नों में से एक को आज़माएं।"
+          : "I'd love to help! Please add your OpenAI API key above to get detailed answers, or try one of the example questions for a quick answer.")
       }
       setLoading(false)
     }
@@ -78,7 +64,7 @@ export default function PhotoBot({ language = 'en' }) {
 
   return (
     <div className="glass rounded-2xl p-6 space-y-4">
-      <h2 className="text-2xl font-bold text-center">{t.title}</h2>
+      <h2 className="text-2xl font-bold text-center">{t('photobot.title', language)}</h2>
 
       {/* API Key Input */}
       <div className="space-y-2">
@@ -86,7 +72,7 @@ export default function PhotoBot({ language = 'en' }) {
           type="password"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder={t.apiKeyPlaceholder}
+          placeholder={language === 'hi' ? 'OpenAI API Key (वैकल्पिक)' : 'OpenAI API Key (optional)'}
           className="w-full px-4 py-2 rounded-lg bg-white/10 dark:bg-black/20 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
@@ -96,7 +82,7 @@ export default function PhotoBot({ language = 'en' }) {
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder={t.placeholder}
+          placeholder={t('photobot.placeholder', language)}
           className="w-full px-4 py-3 rounded-lg bg-white/10 dark:bg-black/20 border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           rows="3"
           onKeyDown={(e) => {
@@ -112,15 +98,15 @@ export default function PhotoBot({ language = 'en' }) {
           whileHover={{ scale: loading ? 1 : 1.02 }}
           whileTap={{ scale: loading ? 1 : 0.98 }}
         >
-          {loading ? 'Thinking...' : t.askButton}
+          {loading ? t('photobot.thinking', language) : t('photobot.send', language)}
         </motion.button>
       </div>
 
       {/* Example Questions */}
       <div className="space-y-2">
-        <div className="text-sm font-semibold">{t.exampleQuestions}</div>
+        <div className="text-sm font-semibold">{t('photobot.exampleQuestions', language)}</div>
         <div className="flex flex-wrap gap-2">
-          {t.examples.map((example, idx) => (
+          {examples.map((example, idx) => (
             <motion.button
               key={idx}
               onClick={() => handleExampleClick(example)}

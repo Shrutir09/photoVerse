@@ -3,8 +3,11 @@
 import { motion } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function HeroSection({ language = 'en' }) {
+export default function HeroSection() {
+  const { language } = useTranslation()
   const [bubbles, setBubbles] = useState([])
   const textContainerRef = useRef(null)
   const yourLivingRef = useRef(null)
@@ -263,21 +266,13 @@ export default function HeroSection({ language = 'en' }) {
         >
           <span ref={yourTextRef} className="inline-block">
             {/* Light mode: dark green text */}
-            <span className="dark:hidden">Your</span>
+            <span className="dark:hidden">{t('hero.yourLiving', language)}</span>
             {/* Dark mode: neon green with glow */}
             <span className="hidden dark:inline-block" style={{
               color: '#4ade80',
               textShadow: '0 0 15px rgba(74, 222, 128, 0.4)',
-            }}>Your</span>
+            }}>{t('hero.yourLiving', language)}</span>
           </span>
-          {' '}
-          {/* Light mode: dark green text */}
-          <span className="dark:hidden">Living</span>
-          {/* Dark mode: neon green with glow */}
-          <span className="hidden dark:inline-block" style={{
-            color: '#4ade80',
-            textShadow: '0 0 15px rgba(74, 222, 128, 0.4)',
-          }}>Living</span>
         </motion.h2>
 
         {/* Main Title - "Photosynthesis World" */}
@@ -294,7 +289,7 @@ export default function HeroSection({ language = 'en' }) {
         >
           {/* Light mode: dark green text */}
           <span className="dark:hidden">
-            Photosynthesis World{' '}
+            {t('hero.photosynthesisWorld', language)}{' '}
             <span className="inline-block align-middle">
               <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">🌱</span>
             </span>
@@ -304,7 +299,7 @@ export default function HeroSection({ language = 'en' }) {
             color: '#4ade80',
             textShadow: '0 0 20px rgba(74, 222, 128, 0.5), 0 2px 10px rgba(74, 222, 128, 0.3)',
           }}>
-            Photosynthesis World{' '}
+            {t('hero.photosynthesisWorld', language)}{' '}
             <span className="inline-block align-middle">
               <span className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl">🌱</span>
             </span>
@@ -324,11 +319,11 @@ export default function HeroSection({ language = 'en' }) {
         >
           {/* Light mode: dark green */}
           <span className="dark:hidden">
-            Learn <span className="text-[#86efac]">•</span> Simulate <span className="text-[#86efac]">•</span> Visualize
+            {t('hero.learn', language)} <span className="text-[#86efac]">•</span> {t('hero.simulate', language)} <span className="text-[#86efac]">•</span> {t('hero.visualize', language)}
           </span>
           {/* Dark mode: white with dark green dots */}
           <span className="hidden dark:inline-block text-white">
-            Learn <span className="text-[#2d5a3d]">•</span> Simulate <span className="text-[#2d5a3d]">•</span> Visualize
+            {t('hero.learn', language)} <span className="text-[#2d5a3d]">•</span> {t('hero.simulate', language)} <span className="text-[#2d5a3d]">•</span> {t('hero.visualize', language)}
           </span>
         </motion.p>
 
@@ -351,13 +346,13 @@ export default function HeroSection({ language = 'en' }) {
             >
               {/* Light mode: elegant shadow */}
               <span className="dark:hidden">
-                Start Simulation
+                {t('hero.startSimulation', language)}
               </span>
               {/* Dark mode: subtle glow */}
               <span className="hidden dark:inline-block" style={{
                 boxShadow: '0 4px 20px rgba(34, 197, 94, 0.5), 0 0 30px rgba(74, 222, 128, 0.3)',
               }}>
-                Start Simulation
+                {t('hero.startSimulation', language)}
               </span>
             </motion.button>
           </Link>

@@ -3,9 +3,12 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function MyPlantCard() {
   const { user } = useAuth()
+  const { language } = useTranslation()
 
   return (
     <motion.div
@@ -44,10 +47,10 @@ export default function MyPlantCard() {
             {/* Content */}
             <div className="flex-1">
               <h3 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-chalk-white mb-2">
-                My Plant
+                {t('home.myPlant', language)}
               </h3>
               <p className="text-gray-600 dark:text-chalk-secondary text-sm md:text-base">
-                Track your plant's health, complete daily care tasks, and build your care streak!
+                {t('home.myPlantDescription', language)}
               </p>
             </div>
 

@@ -14,6 +14,8 @@ import SummaryCards from './components/SummaryCards'
 import BadgesSummary from './components/BadgesSummary'
 import MyPlantCard from './components/MyPlantCard'
 import Footer from './components/Footer'
+import { useTranslation } from './context/TranslationContext'
+import { t } from './utils/translations'
 
 export default function Home() {
   // State for controls
@@ -28,7 +30,7 @@ export default function Home() {
   const [data, setData] = useState(null)
 
   // UI state
-  const [language, setLanguage] = useState('en')
+  const { language } = useTranslation()
   const [tip, setTip] = useState('')
   const [showTip, setShowTip] = useState(false)
 
@@ -65,26 +67,20 @@ export default function Home() {
     }))
   }, [sunlight, co2, temperature, environment])
 
-  // Load language preference
-  useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved) setLanguage(saved)
-  }, [])
-
   // Show tips when sliders change
   useEffect(() => {
     if (data) {
       let newTip = ''
       if (sunlight > 70) {
-        newTip = language === 'hi' ? 'अधिक सूरज की रोशनी → अधिक ऑक्सीजन' : 'More sunlight → more oxygen'
+        newTip = t('home.moreSunlight', language)
       } else if (sunlight < 30) {
-        newTip = language === 'hi' ? 'कम सूरज की रोशनी → धीमी वृद्धि' : 'Less sunlight → slower growth'
+        newTip = t('home.lessSunlight', language)
       } else if (co2 > 70) {
-        newTip = language === 'hi' ? 'उच्च CO₂ → तेज़ प्रकाश संश्लेषण' : 'High CO₂ → faster photosynthesis'
+        newTip = t('home.highCO2', language)
       } else if (temperature > 40) {
-        newTip = language === 'hi' ? 'उच्च तापमान → कम दक्षता' : 'High temperature → lower efficiency'
+        newTip = t('home.highTemp', language)
       } else if (temperature < 15) {
-        newTip = language === 'hi' ? 'कम तापमान → धीमी प्रक्रिया' : 'Low temperature → slower process'
+        newTip = t('home.lowTemp', language)
       }
 
       if (newTip) {
@@ -124,7 +120,7 @@ export default function Home() {
           {/* Control Panel */}
           <section id="simulation" className="scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-              🎛 Control Panel
+              {t('home.controlPanel', language)}
             </h2>
             <Sliders
               sunlight={sunlight}
@@ -142,7 +138,7 @@ export default function Home() {
           {/* Animated Photosynthesis System */}
           <section>
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
-              🌱 Animated Photosynthesis System
+              {t('home.animatedPhotosynthesis', language)}
             </h2>
             <div className="glass rounded-3xl p-6 md:p-8 border-2 border-emerald-500/20 shadow-xl">
               <AnimatedPhotosynthesisSystem />

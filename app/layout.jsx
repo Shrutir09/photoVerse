@@ -1,6 +1,7 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { AuthProvider } from './context/AuthContext'
+import { TranslationProvider } from './context/TranslationContext'
 import NavbarWrapper from './components/NavbarWrapper'
 import GlobalPhotoBotWrapper from './components/GlobalPhotoBotWrapper'
 
@@ -16,11 +17,13 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
-          <NavbarWrapper />
-          <div className="navbar-offset">
-            {children}
-          </div>
-          <GlobalPhotoBotWrapper />
+          <TranslationProvider>
+            <NavbarWrapper />
+            <div className="navbar-offset">
+              {children}
+            </div>
+            <GlobalPhotoBotWrapper />
+          </TranslationProvider>
         </AuthProvider>
       </body>
     </html>

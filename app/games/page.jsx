@@ -9,6 +9,8 @@ import GameBalance from '../components/GameBalance'
 import GameOxygen from '../components/GameOxygen'
 import RewardsSystem from '../components/RewardsSystem'
 import Footer from '../components/Footer'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
 export default function GamesPage() {
   const [sunlight, setSunlight] = useState(50)
@@ -16,7 +18,7 @@ export default function GamesPage() {
   const [temperature, setTemperature] = useState(25)
   const [data, setData] = useState(null)
   const [gameWon, setGameWon] = useState({ balance: false, oxygen: false })
-  const [language, setLanguage] = useState('en')
+  const { language } = useTranslation()
   const [gameWinCount, setGameWinCount] = useState(0)
 
   useEffect(() => {
@@ -38,9 +40,6 @@ export default function GamesPage() {
   }, [sunlight, co2, temperature])
 
   useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved) setLanguage(saved)
-    
     // Load game win count
     const wins = localStorage.getItem('gameWins')
     if (wins) setGameWinCount(parseInt(wins, 10))
@@ -71,7 +70,7 @@ export default function GamesPage() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-green-600 via-emerald-600 to-green-500 bg-clip-text text-transparent mb-6 font-sans">
-              🎮 Educational Games
+              🎮 {t('games.title', language)}
             </h1>
             <p className="text-lg md:text-xl text-gray-500 dark:text-chalk-secondary max-w-2xl mx-auto">
               Learn through interactive challenges

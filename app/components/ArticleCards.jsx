@@ -3,85 +3,76 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-const articles = [
-  {
-    id: 'photosynthesis-basics',
-    title: 'Photosynthesis Basics',
-    icon: '🌱',
-    description: 'Learn how plants convert sunlight into energy and produce oxygen.',
-    color: 'from-green-500 to-emerald-500',
-    bgColor: 'bg-green-500/10',
-    borderColor: 'border-green-500/30',
-  },
-  {
-    id: 'carbon-cycle',
-    title: 'Carbon Cycle',
-    icon: '🌍',
-    description: 'Understand how carbon moves through the atmosphere, plants, and soil.',
-    color: 'from-gray-600 to-gray-700',
-    bgColor: 'bg-gray-500/10',
-    borderColor: 'border-gray-500/30',
-  },
-  {
-    id: 'oxygen-cycle',
-    title: 'Oxygen Cycle',
-    icon: '💨',
-    description: 'Discover how oxygen is produced and consumed in nature.',
-    color: 'from-blue-500 to-cyan-500',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-blue-500/30',
-  },
-  {
-    id: 'ecosystem-balance',
-    title: 'Ecosystem Balance',
-    icon: '⚖️',
-    description: 'Explore how plants maintain balance in natural ecosystems.',
-    color: 'from-emerald-500 to-green-500',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-emerald-500/30',
-  },
-  {
-    id: 'climate-plants',
-    title: 'Climate & Plants',
-    icon: '🌡️',
-    description: 'Learn how temperature and climate affect plant growth.',
-    color: 'from-orange-500 to-red-500',
-    bgColor: 'bg-orange-500/10',
-    borderColor: 'border-orange-500/30',
-  },
-  {
-    id: 'urban-greenery',
-    title: 'Urban Greenery & Air Quality',
-    icon: '🏙️',
-    description: 'See how plants in cities improve air quality and reduce pollution.',
-    color: 'from-teal-500 to-cyan-500',
-    bgColor: 'bg-teal-500/10',
-    borderColor: 'border-teal-500/30',
-  },
-]
-
-export default function ArticleCards({ language = 'en' }) {
-  const translations = {
-    en: {
-      title: 'Articles & Reading',
-      subtitle: 'Explore in-depth articles about photosynthesis and the environment',
+export default function ArticleCards() {
+  const { language } = useTranslation()
+  
+  const articles = [
+    {
+      id: 'photosynthesis-basics',
+      titleKey: 'articles.photosynthesisBasics',
+      icon: '🌱',
+      descriptionKey: 'articles.photosynthesisBasicsDesc',
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'bg-green-500/10',
+      borderColor: 'border-green-500/30',
     },
-    hi: {
-      title: 'लेख और पढ़ना',
-      subtitle: 'प्रकाश संश्लेषण और पर्यावरण के बारे में गहराई से लेख देखें',
+    {
+      id: 'carbon-cycle',
+      titleKey: 'articles.carbonCycle',
+      icon: '🌍',
+      descriptionKey: 'articles.carbonCycleDesc',
+      color: 'from-gray-600 to-gray-700',
+      bgColor: 'bg-gray-500/10',
+      borderColor: 'border-gray-500/30',
     },
-  }
-
-  const t = translations[language] || translations.en
+    {
+      id: 'oxygen-cycle',
+      titleKey: 'articles.oxygenCycle',
+      icon: '💨',
+      descriptionKey: 'articles.oxygenCycleDesc',
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'bg-blue-500/10',
+      borderColor: 'border-blue-500/30',
+    },
+    {
+      id: 'ecosystem-balance',
+      titleKey: 'articles.ecosystemBalance',
+      icon: '⚖️',
+      descriptionKey: 'articles.ecosystemBalanceDesc',
+      color: 'from-emerald-500 to-green-500',
+      bgColor: 'bg-emerald-500/10',
+      borderColor: 'border-emerald-500/30',
+    },
+    {
+      id: 'climate-plants',
+      titleKey: 'articles.climatePlants',
+      icon: '🌡️',
+      descriptionKey: 'articles.climatePlantsDesc',
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'bg-orange-500/10',
+      borderColor: 'border-orange-500/30',
+    },
+    {
+      id: 'urban-greenery',
+      titleKey: 'articles.urbanGreenery',
+      icon: '🏙️',
+      descriptionKey: 'articles.urbanGreeneryDesc',
+      color: 'from-teal-500 to-cyan-500',
+      bgColor: 'bg-teal-500/10',
+      borderColor: 'border-teal-500/30',
+    },
+  ]
 
   return (
     <div className="space-y-6">
       <div className="text-center md:text-left">
         <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-2">
-          📚 {t.title}
+          📚 {t('articles.title', language)}
         </h2>
-        <p className="text-gray-600 dark:text-chalk-secondary">{t.subtitle}</p>
+        <p className="text-gray-600 dark:text-chalk-secondary">{t('articles.subtitle', language)}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,15 +92,15 @@ export default function ArticleCards({ language = 'en' }) {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-gray-800 dark:text-chalk-white mb-2">
-                    {article.title}
+                    {t(article.titleKey, language)}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-chalk-secondary leading-relaxed">
-                    {article.description}
+                    {t(article.descriptionKey, language)}
                   </p>
                 </div>
               </div>
               <div className="mt-4 flex items-center text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                Read more →
+                {t('articles.readMore', language)} →
               </div>
             </motion.div>
           </Link>

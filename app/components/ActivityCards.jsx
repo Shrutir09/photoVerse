@@ -2,8 +2,11 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function ActivityCards({ language = 'en' }) {
+export default function ActivityCards() {
+  const { language } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
   const [sunlight, setSunlight] = useState(50)
   const [co2, setCo2] = useState(50)
@@ -13,54 +16,13 @@ export default function ActivityCards({ language = 'en' }) {
   const photosynthesisRate = Math.min(100, (sunlight * co2) / 50)
   const oxygenOutput = Math.min(100, photosynthesisRate * 0.9)
   const plantHealth = photosynthesisRate > 70 ? 'healthy' : photosynthesisRate > 40 ? 'average' : 'poor'
-  const leafHealth = water > 60 && sunlight > 50 ? 'excellent' : water > 40 && sunlight > 40 ? 'good' : 'needs-care'
-
-  const translations = {
-    en: {
-      title: 'Activities & Experiments',
-      subtitle: 'Interactive experiments to understand photosynthesis',
-      expand: 'Expand to experiment',
-      collapse: 'Collapse',
-      growPlant: 'Grow a Virtual Plant',
-      adjustSunlight: 'Adjust Sunlight',
-      adjustCo2: 'Adjust CO₂ Level',
-      waterControl: 'Water Level Control',
-      oxygenOutput: 'Oxygen Output',
-      leafHealth: 'Leaf Health Indicator',
-      healthy: 'Healthy',
-      average: 'Average',
-      poor: 'Poor',
-      excellent: 'Excellent',
-      good: 'Good',
-      needsCare: 'Needs Care',
-    },
-    hi: {
-      title: 'गतिविधियाँ और प्रयोग',
-      subtitle: 'प्रकाश संश्लेषण को समझने के लिए इंटरैक्टिव प्रयोग',
-      expand: 'प्रयोग करने के लिए विस्तार करें',
-      collapse: 'संकुचित करें',
-      growPlant: 'एक वर्चुअल पौधा उगाएं',
-      adjustSunlight: 'सूरज की रोशनी समायोजित करें',
-      adjustCo2: 'CO₂ स्तर समायोजित करें',
-      waterControl: 'पानी का स्तर नियंत्रण',
-      oxygenOutput: 'ऑक्सीजन उत्पादन',
-      leafHealth: 'पत्ती स्वास्थ्य संकेतक',
-      healthy: 'स्वस्थ',
-      average: 'औसत',
-      poor: 'खराब',
-      excellent: 'उत्कृष्ट',
-      good: 'अच्छा',
-      needsCare: 'देखभाल की जरूरत',
-    },
-  }
-
-  const t = translations[language] || translations.en
+  const leafHealth = water > 60 && sunlight > 50 ? 'excellent' : water > 40 && sunlight > 40 ? 'good' : 'needsCare'
 
   // Preview cards data
   const previewCards = [
-    { icon: '🌱', label: t.growPlant, color: 'from-green-500 to-emerald-500' },
-    { icon: '💨', label: t.oxygenOutput, color: 'from-blue-500 to-cyan-500' },
-    { icon: '🍃', label: t.leafHealth, color: 'from-emerald-500 to-green-500' },
+    { icon: '🌱', labelKey: 'activities.growPlant', color: 'from-green-500 to-emerald-500' },
+    { icon: '💨', labelKey: 'activities.oxygenOutput', color: 'from-blue-500 to-cyan-500' },
+    { icon: '🍃', labelKey: 'activities.leafHealth', color: 'from-emerald-500 to-green-500' },
   ]
 
   return (
@@ -68,9 +30,9 @@ export default function ActivityCards({ language = 'en' }) {
       <div className="flex items-center justify-between">
         <div className="text-center md:text-left">
           <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent mb-2">
-            🧪 {t.title}
+            🧪 {t('activities.title', language)}
           </h2>
-          <p className="text-gray-600 dark:text-chalk-secondary">{t.subtitle}</p>
+          <p className="text-gray-600 dark:text-chalk-secondary">{t('activities.subtitle', language)}</p>
         </div>
       </div>
 
@@ -92,7 +54,7 @@ export default function ActivityCards({ language = 'en' }) {
               </div>
               <div className="flex-1">
                 <div className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">
-                  {card.label}
+                  {t(card.labelKey, language)}
                 </div>
               </div>
             </div>
@@ -108,7 +70,7 @@ export default function ActivityCards({ language = 'en' }) {
         className="w-full glass rounded-xl p-4 border-2 border-emerald-500/20 shadow-lg flex items-center justify-between group"
       >
         <span className="font-semibold text-emerald-600 dark:text-chalk-emerald">
-          {isExpanded ? t.collapse : t.expand}
+          {isExpanded ? t('activities.collapse', language) : t('activities.expand', language)}
         </span>
         <motion.div
           animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -140,7 +102,7 @@ export default function ActivityCards({ language = 'en' }) {
                 <div className="flex items-center gap-3 mb-6">
                   <span className="text-3xl">🌱</span>
                   <h3 className="text-xl font-bold text-gray-800 dark:text-chalk-white">
-                    {t.growPlant}
+                    {t('activities.growPlant', language)}
                   </h3>
                 </div>
 
@@ -149,7 +111,7 @@ export default function ActivityCards({ language = 'en' }) {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">☀️</span>
-                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t.adjustSunlight}</span>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t('activities.adjustSunlight', language)}</span>
                     </div>
                     <span className="text-base font-bold text-yellow-600">{sunlight}%</span>
                   </div>
@@ -171,7 +133,7 @@ export default function ActivityCards({ language = 'en' }) {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">🌬</span>
-                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t.adjustCo2}</span>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t('activities.adjustCo2', language)}</span>
                     </div>
                     <span className="text-base font-bold text-blue-600">{co2}%</span>
                   </div>
@@ -193,7 +155,7 @@ export default function ActivityCards({ language = 'en' }) {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-xl">💧</span>
-                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t.waterControl}</span>
+                      <span className="text-sm font-semibold text-gray-700 dark:text-chalk-secondary">{t('activities.waterControl', language)}</span>
                     </div>
                     <span className="text-base font-bold text-cyan-600">{water}%</span>
                   </div>
@@ -223,7 +185,7 @@ export default function ActivityCards({ language = 'en' }) {
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl">💨</span>
                     <h3 className="text-lg font-bold text-gray-800 dark:text-chalk-white">
-                      {t.oxygenOutput}
+                      {t('activities.oxygenOutput', language)}
                     </h3>
                   </div>
                   <div className="relative">
@@ -251,7 +213,7 @@ export default function ActivityCards({ language = 'en' }) {
                   <div className="flex items-center gap-2 mb-4">
                     <span className="text-2xl">🍃</span>
                     <h3 className="text-lg font-bold text-gray-800 dark:text-chalk-white">
-                      {t.leafHealth}
+                      {t('activities.leafHealth', language)}
                     </h3>
                   </div>
                   <div className="flex items-center gap-4">
@@ -266,10 +228,10 @@ export default function ActivityCards({ language = 'en' }) {
                     </motion.div>
                     <div>
                       <div className="text-xl font-bold mb-1">
-                        {plantHealth === 'healthy' ? t.healthy : plantHealth === 'average' ? t.average : t.poor}
+                        {plantHealth === 'healthy' ? t('activities.healthy', language) : plantHealth === 'average' ? t('activities.average', language) : t('activities.poor', language)}
                       </div>
                       <div className="text-xs text-gray-600 dark:text-chalk-secondary">
-                        {leafHealth === 'excellent' ? t.excellent : leafHealth === 'good' ? t.good : t.needsCare}
+                        {leafHealth === 'excellent' ? t('activities.excellent', language) : leafHealth === 'good' ? t('activities.good', language) : t('activities.needsCare', language)}
                       </div>
                     </div>
                   </div>
@@ -296,7 +258,7 @@ export default function ActivityCards({ language = 'en' }) {
                   </div>
                   <div className="text-center mt-3">
                     <div className="text-xs font-semibold text-gray-700 dark:text-chalk-secondary">
-                      Photosynthesis: {photosynthesisRate.toFixed(1)}%
+                      {t('activities.photosynthesis', language)}: {photosynthesisRate.toFixed(1)}%
                     </div>
                   </div>
                 </motion.div>

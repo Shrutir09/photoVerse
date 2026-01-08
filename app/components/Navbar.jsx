@@ -7,8 +7,11 @@ import Link from 'next/link'
 import Logo from './Logo'
 import LanguageToggle from './LanguageToggle'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../context/TranslationContext'
+import { t } from '../utils/translations'
 
-export default function Navbar({ language, onLanguageChange, darkMode, onDarkModeToggle }) {
+export default function Navbar({ darkMode, onDarkModeToggle }) {
+  const { language, setLanguage } = useTranslation()
   const [scrolled, setScrolled] = useState(false)
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const [showMobileMenu, setShowMobileMenu] = useState(false)
@@ -43,10 +46,10 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
   }, [pathname])
 
   const navItems = [
-    { href: '/', label: { en: 'Home', hi: 'होम' }, icon: '🏠' },
-    { href: '/learn', label: { en: 'Learn', hi: 'सीखें' }, icon: '📚' },
-    { href: '/games', label: { en: 'Games', hi: 'खेल' }, icon: '🎮' },
-    { href: '/charts', label: { en: 'Charts', hi: 'चार्ट' }, icon: '📊' },
+    { href: '/', labelKey: 'navbar.home', icon: '🏠' },
+    { href: '/learn', labelKey: 'navbar.learn', icon: '📚' },
+    { href: '/games', labelKey: 'navbar.games', icon: '🎮' },
+    { href: '/charts', labelKey: 'navbar.charts', icon: '📊' },
   ]
 
   const isActive = (href) => {
@@ -93,7 +96,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                 }`}
               >
                 <span className="mr-2">{item.icon}</span>
-                {item.label[language] || item.label.en}
+                {t(item.labelKey, language)}
                 {isActive(item.href) && (
                   <motion.div
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-500 rounded-full"
@@ -115,14 +118,14 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
         <div className="flex items-center pr-4 flex-shrink-0 gap-4">
           {/* Desktop: Language, Dark Mode, Profile */}
           <div className="hidden md:flex items-center gap-4">
-            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+            <LanguageToggle language={language} onLanguageChange={setLanguage} />
             
             <motion.button
               onClick={onDarkModeToggle}
               className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
               whileHover={{ scale: 1.1, rotate: 180 }}
               whileTap={{ scale: 0.9 }}
-              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={darkMode ? t('navbar.switchToLight', language) : t('navbar.switchToDark', language)}
             >
               {darkMode ? '☀️' : '🌙'}
             </motion.button>
@@ -185,10 +188,10 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                           <span className="text-2xl">👤</span>
                           <div className="flex-1">
                             <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
-                              Profile
+                              {t('navbar.profile', language)}
                             </div>
                             <div className="text-xs text-green-100">
-                              View your stats
+                              {t('navbar.viewStats', language)}
                             </div>
                           </div>
                           <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -202,10 +205,10 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                           <span className="text-2xl">🏆</span>
                           <div className="flex-1">
                             <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
-                              Badges
+                              {t('navbar.badges', language)}
                             </div>
                             <div className="text-xs text-green-100">
-                              {(user.badges || []).length} unlocked
+                              {(user.badges || []).length} {t('navbar.unlocked', language)}
                             </div>
                           </div>
                           <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -219,10 +222,10 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                           <span className="text-2xl">📊</span>
                           <div className="flex-1">
                             <div className="font-semibold text-white group-hover:text-green-300 transition-colors">
-                              Leaderboard
+                              {t('navbar.leaderboard', language)}
                             </div>
                             <div className="text-xs text-green-100">
-                              See rankings
+                              {t('navbar.seeRankings', language)}
                             </div>
                           </div>
                           <span className="text-green-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -243,10 +246,10 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                         <span className="text-2xl">🚪</span>
                         <div className="flex-1 text-left">
                           <div className="font-semibold text-red-400 group-hover:text-red-300 transition-colors">
-                            Logout
+                            {t('navbar.logout', language)}
                           </div>
                           <div className="text-xs text-red-300/70">
-                            Sign out of your account
+                            {t('navbar.signOut', language)}
                           </div>
                         </div>
                         <span className="text-red-400 opacity-0 group-hover:opacity-100 transition-opacity">→</span>
@@ -260,20 +263,20 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                 href="/login"
                 className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg shadow-green-500/30 text-sm"
               >
-                Login
+                {t('navbar.login', language)}
               </Link>
             )}
           </div>
 
           {/* Mobile: Language, Dark Mode Toggle, Hamburger */}
           <div className="flex md:hidden items-center gap-3">
-            <LanguageToggle language={language} onLanguageChange={onLanguageChange} />
+            <LanguageToggle language={language} onLanguageChange={setLanguage} />
             <motion.button
               onClick={onDarkModeToggle}
               className="glass rounded-full p-2 text-lg hover:bg-green-500/10 transition-colors"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              title={darkMode ? t('navbar.switchToLight', language) : t('navbar.switchToDark', language)}
             >
               {darkMode ? '☀️' : '🌙'}
             </motion.button>
@@ -281,7 +284,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
               onClick={() => setShowMobileMenu(!showMobileMenu)}
               className="glass rounded-lg p-2 hover:bg-green-500/10 transition-colors mobile-menu"
               whileTap={{ scale: 0.9 }}
-              aria-label="Toggle menu"
+              aria-label={t('navbar.toggleMenu', language)}
             >
               <motion.div
                 animate={{ rotate: showMobileMenu ? 180 : 0 }}
@@ -319,7 +322,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                     }`}
                   >
                     <span className="text-2xl">{item.icon}</span>
-                    <span className="font-semibold">{item.label[language] || item.label.en}</span>
+                    <span className="font-semibold">{t(item.labelKey, language)}</span>
                     {isActive(item.href) && (
                       <span className="ml-auto text-green-500">●</span>
                     )}
@@ -343,7 +346,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                             {user.name || 'User'}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-chalk-secondary">
-                            View Profile
+                            {t('navbar.viewProfile', language)}
                           </div>
                         </div>
                         <span className="text-gray-400 dark:text-chalk-secondary">→</span>
@@ -354,7 +357,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all"
                     >
                       <span className="text-2xl">🏆</span>
-                      <span className="font-semibold text-gray-700 dark:text-chalk-white">Badges</span>
+                      <span className="font-semibold text-gray-700 dark:text-chalk-white">{t('navbar.badges', language)}</span>
                       <span className="ml-auto text-gray-400 dark:text-chalk-secondary">→</span>
                     </Link>
                     <Link
@@ -363,7 +366,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                       className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-green-500/10 transition-all"
                     >
                       <span className="text-2xl">📊</span>
-                      <span className="font-semibold text-gray-700 dark:text-chalk-white">Leaderboard</span>
+                      <span className="font-semibold text-gray-700 dark:text-chalk-white">{t('navbar.leaderboard', language)}</span>
                       <span className="ml-auto text-gray-400 dark:text-chalk-secondary">→</span>
                     </Link>
                     <div className="border-t border-green-500/20 my-3" />
@@ -375,7 +378,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-500/10 transition-all text-red-500"
                     >
                       <span className="text-2xl">🚪</span>
-                      <span className="font-semibold">Logout</span>
+                      <span className="font-semibold">{t('navbar.logout', language)}</span>
                     </button>
                   </>
                 ) : (
@@ -386,7 +389,7 @@ export default function Navbar({ language, onLanguageChange, darkMode, onDarkMod
                       onClick={() => setShowMobileMenu(false)}
                       className="block w-full text-center px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-semibold rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg"
                     >
-                      Login
+                      {t('navbar.login', language)}
                     </Link>
                   </>
                 )}
