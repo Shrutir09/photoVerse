@@ -57,7 +57,6 @@ export async function POST(request) {
       name,
       email: email.toLowerCase(),
       password,
-      provider: 'local',
     })
 
     // Return user data (password is excluded by toJSON method)

@@ -1,11 +1,23 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Suspense } from 'react'
 import { AuthProvider } from './context/AuthContext'
 import { TranslationProvider } from './context/TranslationContext'
-import NavbarWrapper from './components/NavbarWrapper'
-import GlobalPhotoBotWrapper from './components/GlobalPhotoBotWrapper'
+import dynamic from 'next/dynamic'
 
-const inter = Inter({ subsets: ['latin'] })
+// Lazy load heavy components
+const NavbarWrapper = dynamic(() => import('./components/NavbarWrapper'), {
+  ssr: true,
+})
+const GlobalPhotoBotWrapper = dynamic(() => import('./components/GlobalPhotoBotWrapper'), {
+  ssr: false, // PhotoBot doesn't need SSR
+})
+
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap', // Better font loading performance
+  preload: true,
+})
 
 export const metadata = {
   title: 'PHOTOSPHERE - Where Sunlight Becomes Life',
@@ -22,7 +34,9 @@ export default function RootLayout({ children }) {
             <div className="navbar-offset">
               {children}
             </div>
-            <GlobalPhotoBotWrapper />
+            <Suspense fallback={null}>
+              <GlobalPhotoBotWrapper />
+            </Suspense>
           </TranslationProvider>
         </AuthProvider>
       </body>

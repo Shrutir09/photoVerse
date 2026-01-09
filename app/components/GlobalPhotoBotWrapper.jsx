@@ -18,29 +18,60 @@ export default function GlobalPhotoBotWrapper() {
   const [language, setLanguage] = useState('en')
 
   useEffect(() => {
-    // Load language preference
-    const saved = localStorage.getItem('language')
-    if (saved) setLanguage(saved)
+    // Load language preference only on client
+    if (typeof window === 'undefined') return
+    
+    try {
+      const saved = localStorage.getItem('language')
+      if (saved) setLanguage(saved)
+    } catch (e) {
+      // localStorage not available
+    }
   }, [])
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+    
     // Try to get context from localStorage (set by pages with simulation)
-    const savedContext = localStorage.getItem('simulationContext')
-    if (savedContext) {
+    // Use requestIdleCallback for non-critical operation
+    const loadContext = () => {
       try {
-        setContext(JSON.parse(savedContext))
+        const savedContext = localStorage.getItem('simulationContext')
+        if (savedContext) {
+          setContext(JSON.parse(savedContext))
+        }
       } catch (e) {
-        // Invalid context
+        // Invalid context or localStorage not available
       }
+    }
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadContext, { timeout: 1000 })
+    } else {
+      // Fallback: use setTimeout
+      setTimeout(loadContext, 0)
     }
   }, [pathname])
 
   // Listen for context updates from pages
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     const handleContextUpdate = (e) => {
       if (e.detail && typeof e.detail === 'object') {
-        setContext(prev => ({ ...prev, ...e.detail }))
-        localStorage.setItem('simulationContext', JSON.stringify({ ...context, ...e.detail }))
+        setContext(prev => {
+          const newContext = { ...prev, ...e.detail }
+          // Debounce localStorage writes
+          setTimeout(() => {
+            try {
+              localStorage.setItem('simulationContext', JSON.stringify(newContext))
+            } catch (e) {
+              // localStorage not available
+            }
+          }, 300)
+          return newContext
+        })
       }
     }
 

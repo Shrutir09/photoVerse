@@ -50,14 +50,6 @@ export async function POST(request) {
       )
     }
 
-    // Check if user has a password (not OAuth user)
-    if (!user.password) {
-      return NextResponse.json(
-        { error: 'Please sign in with your social account' },
-        { status: 401 }
-      )
-    }
-
     // Compare password
     const isPasswordMatch = await user.comparePassword(password)
 

@@ -18,20 +18,14 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: function() {
-        return !this.provider || this.provider === 'local'
-      },
+      required: [true, 'Please provide a password'],
       minlength: [8, 'Password must be at least 8 characters'],
       select: false, // Don't return password by default
     },
     provider: {
       type: String,
-      enum: ['local', 'google'],
+      enum: ['local'],
       default: 'local',
-    },
-    providerId: {
-      type: String,
-      sparse: true, // Allows null values but enforces uniqueness when present
     },
     level: {
       type: Number,

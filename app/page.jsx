@@ -1,21 +1,37 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import dynamic from 'next/dynamic'
 import { calculateAll } from './logic/photosynthesis'
 import ProtectedRoute from './components/ProtectedRoute'
 import HeroSection from './components/HeroSection'
 import Sliders from './components/Sliders'
-import LiveEnvironmentPanel from './components/LiveEnvironmentPanel'
-import AnimatedPhotosynthesisSystem from './components/AnimatedPhotosynthesisSystem'
-import OxygenMeter from './components/OxygenMeter'
-import EcosystemActivity from './components/EcosystemActivity'
-import SummaryCards from './components/SummaryCards'
-import BadgesSummary from './components/BadgesSummary'
-import MyPlantCard from './components/MyPlantCard'
-import Footer from './components/Footer'
 import { useTranslation } from './context/TranslationContext'
 import { t } from './utils/translations'
+
+// Lazy load heavy components for better initial load performance
+const LiveEnvironmentPanel = dynamic(() => import('./components/LiveEnvironmentPanel'), {
+  loading: () => <div className="h-64 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const AnimatedPhotosynthesisSystem = dynamic(() => import('./components/AnimatedPhotosynthesisSystem'), {
+  loading: () => <div className="h-96 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const EcosystemActivity = dynamic(() => import('./components/EcosystemActivity'), {
+  loading: () => <div className="h-64 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const SummaryCards = dynamic(() => import('./components/SummaryCards'), {
+  loading: () => <div className="h-48 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const BadgesSummary = dynamic(() => import('./components/BadgesSummary'), {
+  loading: () => <div className="h-48 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const MyPlantCard = dynamic(() => import('./components/MyPlantCard'), {
+  loading: () => <div className="h-64 bg-white/50 dark:bg-gray-800/50 rounded-xl animate-pulse" />,
+})
+const Footer = dynamic(() => import('./components/Footer'), {
+  ssr: false, // Footer doesn't need SSR
+})
 
 export default function Home() {
   // State for controls
@@ -26,8 +42,8 @@ export default function Home() {
   // Environment data from Live Environment Panel
   const [environment, setEnvironment] = useState(null)
 
-  // Calculated values
-  const [data, setData] = useState(null)
+  // Calculated values - initialize with default to avoid blocking render
+  const [data, setData] = useState(() => calculateAll(50, 50, 25, null))
 
   // UI state
   const { language } = useTranslation()
@@ -39,32 +55,51 @@ export default function Home() {
     setEnvironment(envData)
   }
 
-  // Calculate data whenever controls or environment change
+  // Calculate data whenever controls or environment change (optimized)
   useEffect(() => {
-    const result = calculateAll(sunlight, co2, temperature, environment)
-    setData(result)
-    
-    // Update PhotoBot context
-    const event = new CustomEvent('photobot-context-update', {
-      detail: {
-        sunlight,
-        co2,
-        temperature,
-        photosynthesisRate: result.photosynthesisRate,
-        oxygen: result.oxygen,
-        plantHealth: result.plantHealth,
-      }
+    // Use requestAnimationFrame to batch updates for better performance
+    const frameId = requestAnimationFrame(() => {
+      const result = calculateAll(sunlight, co2, temperature, environment)
+      setData(result)
+      
+      // Update PhotoBot context
+      const event = new CustomEvent('photobot-context-update', {
+        detail: {
+          sunlight,
+          co2,
+          temperature,
+          photosynthesisRate: result.photosynthesisRate,
+          oxygen: result.oxygen,
+          plantHealth: result.plantHealth,
+        }
+      })
+      window.dispatchEvent(event)
     })
-    window.dispatchEvent(event)
-    localStorage.setItem('simulationContext', JSON.stringify({
-      sunlight,
-      co2,
-      temperature,
-      photosynthesisRate: result.photosynthesisRate,
-      oxygen: result.oxygen,
-      plantHealth: result.plantHealth,
-      environment,
-    }))
+
+    // Debounce localStorage writes (only save after 500ms of no changes)
+    const timeoutId = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        try {
+          const result = calculateAll(sunlight, co2, temperature, environment)
+          localStorage.setItem('simulationContext', JSON.stringify({
+            sunlight,
+            co2,
+            temperature,
+            photosynthesisRate: result.photosynthesisRate,
+            oxygen: result.oxygen,
+            plantHealth: result.plantHealth,
+            environment,
+          }))
+        } catch (e) {
+          // localStorage not available
+        }
+      }
+    }, 500)
+
+    return () => {
+      cancelAnimationFrame(frameId)
+      clearTimeout(timeoutId)
+    }
   }, [sunlight, co2, temperature, environment])
 
   // Show tips when sliders change
@@ -92,18 +127,6 @@ export default function Home() {
     }
   }, [sunlight, co2, temperature, data, language])
 
-  if (!data) {
-    return (
-      <ProtectedRoute>
-        <div className="flex items-center justify-center h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:bg-chalkboard-bg">
-          <div className="text-center">
-            <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-chalk-secondary">Loading...</p>
-          </div>
-        </div>
-      </ProtectedRoute>
-    )
-  }
 
   return (
     <ProtectedRoute>

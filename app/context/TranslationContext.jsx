@@ -6,17 +6,34 @@ const TranslationContext = createContext(null)
 
 export function TranslationProvider({ children }) {
   const [language, setLanguage] = useState('en')
+  const [mounted, setMounted] = useState(false)
 
+  // Mark component as mounted (client-side only)
   useEffect(() => {
-    const saved = localStorage.getItem('language')
-    if (saved) {
-      setLanguage(saved)
+    setMounted(true)
+    // Load language preference only on client
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('language')
+        if (saved) {
+          setLanguage(saved)
+        }
+      } catch (e) {
+        // localStorage not available
+      }
     }
   }, [])
 
   useEffect(() => {
-    localStorage.setItem('language', language)
-  }, [language])
+    // Only save to localStorage after mount and when language changes
+    if (mounted && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('language', language)
+      } catch (e) {
+        // localStorage not available
+      }
+    }
+  }, [language, mounted])
 
   return (
     <TranslationContext.Provider value={{ language, setLanguage }}>

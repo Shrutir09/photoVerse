@@ -16,22 +16,37 @@ export default function NavbarWrapper() {
   const hideNavbar = pathname === '/login' || pathname === '/signup' || pathname === '/forgot-password'
 
   useEffect(() => {
-    // Load preferences
-    const savedDarkMode = localStorage.getItem('darkMode')
-    if (savedDarkMode === 'true') {
-      setDarkMode(true)
-      document.documentElement.classList.add('dark')
+    // Load preferences only on client side
+    if (typeof window === 'undefined') return
+    
+    try {
+      const savedDarkMode = localStorage.getItem('darkMode')
+      if (savedDarkMode === 'true') {
+        setDarkMode(true)
+        document.documentElement.classList.add('dark')
+      } else {
+        // Ensure light mode is set
+        document.documentElement.classList.remove('dark')
+      }
+    } catch (e) {
+      // localStorage not available
     }
-
   }, [])
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     if (darkMode) {
       document.documentElement.classList.add('dark')
-      localStorage.setItem('darkMode', 'true')
     } else {
       document.documentElement.classList.remove('dark')
-      localStorage.setItem('darkMode', 'false')
+    }
+    
+    // Save to localStorage (non-blocking)
+    try {
+      localStorage.setItem('darkMode', darkMode ? 'true' : 'false')
+    } catch (e) {
+      // localStorage not available
     }
   }, [darkMode])
 

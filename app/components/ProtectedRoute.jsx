@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '../context/AuthContext'
 
@@ -8,30 +8,42 @@ export default function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
+
+  // Mark as mounted to avoid hydration issues
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
-    if (!loading && !isAuthenticated) {
+    // Only redirect after mount and when not loading
+    if (!mounted || loading) return
+    
+    if (!isAuthenticated) {
       // Save the intended destination
-      localStorage.setItem('redirectAfterLogin', pathname)
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('redirectAfterLogin', pathname)
+        } catch (e) {
+          // localStorage not available
+        }
+      }
       router.push('/login')
     }
-  }, [isAuthenticated, loading, router, pathname])
+  }, [isAuthenticated, loading, router, pathname, mounted])
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:from-gray-900 dark:via-green-900 dark:to-emerald-900">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Loading...</p>
-        </div>
-      </div>
-    )
+  // Don't show loading state - render children immediately
+  // Auth check happens in background
+  if (!mounted) {
+    return <>{children}</>
   }
 
-  if (!isAuthenticated) {
+  // If not authenticated and not loading, return null (redirect will happen)
+  if (!loading && !isAuthenticated) {
     return null
   }
 
+  // Render children immediately - don't block on auth
   return <>{children}</>
 }
 
