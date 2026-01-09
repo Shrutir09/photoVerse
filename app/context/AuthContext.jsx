@@ -55,6 +55,14 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ email, password }),
       })
 
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        return { success: false, error: 'Server returned an invalid response. Please try again.' }
+      }
+
       const data = await response.json()
 
       if (!response.ok) {
@@ -69,7 +77,7 @@ export function AuthProvider({ children }) {
       return { success: true, user: data.user }
     } catch (error) {
       console.error('Login error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error.message || 'An unexpected error occurred. Please try again.' }
     }
   }
 
@@ -83,6 +91,14 @@ export function AuthProvider({ children }) {
         body: JSON.stringify({ name, email, password }),
       })
 
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        return { success: false, error: 'Server returned an invalid response. Please try again.' }
+      }
+
       const data = await response.json()
 
       if (!response.ok) {
@@ -94,7 +110,43 @@ export function AuthProvider({ children }) {
       return loginResult
     } catch (error) {
       console.error('Signup error:', error)
-      return { success: false, error: error.message }
+      return { success: false, error: error.message || 'An unexpected error occurred. Please try again.' }
+    }
+  }
+
+  const googleLogin = async (googleToken) => {
+    try {
+      const response = await fetch(`${API_BASE}/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: googleToken }),
+      })
+
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        return { success: false, error: 'Server returned an invalid response. Please try again.' }
+      }
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Google authentication failed')
+      }
+
+      // Store token and user data
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify(data.user))
+      setUser(data.user)
+
+      return { success: true, user: data.user }
+    } catch (error) {
+      console.error('Google login error:', error)
+      return { success: false, error: error.message || 'An unexpected error occurred. Please try again.' }
     }
   }
 
@@ -109,6 +161,7 @@ export function AuthProvider({ children }) {
     user,
     login,
     signup,
+    googleLogin,
     logout,
     loading,
     isAuthenticated: !!user,

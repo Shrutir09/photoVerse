@@ -4,7 +4,18 @@ import User from '../../../../models/User'
 
 export async function POST(request) {
   try {
-    const { name, email, password } = await request.json()
+    // Parse request body with error handling
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        { error: 'Invalid request body. Please provide valid JSON.' },
+        { status: 400 }
+      )
+    }
+
+    const { name, email, password } = body
 
     // Validate input
     if (!name || !email || !password) {

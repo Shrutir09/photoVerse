@@ -30,7 +30,35 @@ npm install
      ```
    - Generate a secure JWT secret (you can use: `openssl rand -base64 32`)
 
-## Step 3: (Optional) Set Up OpenAI API Key
+## Step 3: Set Up Google OAuth (Optional but Recommended)
+
+To enable "Sign in with Google" functionality:
+
+1. **Create a Google OAuth 2.0 Client ID:**
+   - Go to [Google Cloud Console](https://console.cloud.google.com/)
+   - Create a new project or select an existing one
+   - Enable the "Google+ API" (or "Google Identity Services API")
+   - Go to "Credentials" → "Create Credentials" → "OAuth client ID"
+   - Choose "Web application" as the application type
+   - Add authorized JavaScript origins:
+     - `http://localhost:3000` (for development)
+     - Your production domain (e.g., `https://yourdomain.com`)
+   - Add authorized redirect URIs:
+     - `http://localhost:3000` (for development)
+     - Your production domain
+   - Copy the Client ID
+
+2. **Add to Environment Variables:**
+   - Add these lines to your `.env.local` file:
+     ```
+     GOOGLE_CLIENT_ID=your_google_client_id_here
+     NEXT_PUBLIC_GOOGLE_CLIENT_ID=your_google_client_id_here
+     ```
+   - **Important:** Use the same Client ID for both variables
+
+**Note:** Without Google OAuth configured, users can still sign up/login with email and password. The Google button will be disabled.
+
+## Step 4: (Optional) Set Up OpenAI API Key
 
 For the PhotoBot AI tutor feature, you can optionally set up an OpenAI API key:
 
@@ -42,13 +70,13 @@ For the PhotoBot AI tutor feature, you can optionally set up an OpenAI API key:
 
 **Note:** PhotoBot will work without an API key using fallback responses for common questions. You can also enter the API key directly in the PhotoBot component interface.
 
-## Step 4: Run the Development Server
+## Step 5: Run the Development Server
 
 ```bash
 npm run dev
 ```
 
-## Step 5: Open in Browser
+## Step 6: Open in Browser
 
 Navigate to [http://localhost:3000](http://localhost:3000)
 
@@ -57,6 +85,7 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 The app now includes full authentication with MongoDB:
 - **Sign Up:** Create a new account with email and password
 - **Sign In:** Login with your credentials
+- **Google OAuth:** Sign in/up with your Google account (if configured)
 - **Protected Routes:** Some pages require authentication
 - **JWT Tokens:** Secure token-based authentication
 - **User Profiles:** Track your level, points, and badges
@@ -64,8 +93,9 @@ The app now includes full authentication with MongoDB:
 ## Features to Try
 
 1. **Authentication:**
-   - Sign up for a new account
+   - Sign up for a new account with email/password
    - Login with your credentials
+   - Sign in/up with Google (if configured)
    - Access protected features
 
 2. **Live Simulation Tab:**

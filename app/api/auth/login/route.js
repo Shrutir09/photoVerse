@@ -8,7 +8,18 @@ const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d'
 
 export async function POST(request) {
   try {
-    const { email, password } = await request.json()
+    // Parse request body with error handling
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        { error: 'Invalid request body. Please provide valid JSON.' },
+        { status: 400 }
+      )
+    }
+
+    const { email, password } = body
 
     // Validate input
     if (!email || !password) {
@@ -18,8 +29,16 @@ export async function POST(request) {
       )
     }
 
-    // Connect to database
-    await connectDB()
+    // Connect to database with error handling
+    try {
+      await connectDB()
+    } catch (dbError) {
+      console.error('Database connection error:', dbError)
+      return NextResponse.json(
+        { error: 'Database connection failed', details: process.env.NODE_ENV === 'development' ? dbError.message : undefined },
+        { status: 500 }
+      )
+    }
 
     // Find user and include password field
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password')
@@ -76,7 +95,10 @@ export async function POST(request) {
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(
-      { error: 'Server error. Please try again later.' },
+      { 
+        error: 'Server error. Please try again later.',
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     )
   }

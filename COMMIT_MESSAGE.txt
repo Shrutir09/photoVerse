@@ -1,0 +1,42 @@
+feat: Implement Google OAuth authentication for login and signup
+
+Add complete Google OAuth 2.0 integration allowing users to sign in/up
+with their Google accounts. The implementation includes server-side token
+verification, automatic user creation/linking, and seamless authentication
+flow on both login and signup pages.
+
+Features:
+- Google Identity Services integration on client-side
+- Server-side token verification using google-auth-library
+- Automatic user account creation for new Google users
+- Account linking for existing email/password users
+- Avatar synchronization from Google profile
+- Comprehensive error handling and edge case management
+- Race condition handling for concurrent requests
+- TypeScript definitions for Google Identity Services
+
+Changes:
+- Add /api/auth/google route for Google OAuth authentication
+- Update AuthContext with googleLogin function
+- Integrate Google Sign-In button on login page
+- Integrate Google Sign-Up button on signup page
+- Fix MongoDB connection error handling (defer env check)
+- Improve error handling in login/signup routes
+- Add TypeScript definitions for Google Identity Services
+- Update SETUP.md with Google OAuth configuration instructions
+
+Technical improvements:
+- Enhanced request body parsing error handling
+- Better database connection error messages
+- Improved client-side JSON response validation
+- Added proper loading states and user feedback
+
+Dependencies:
+- Add google-auth-library package for server-side token verification
+
+The implementation handles all user scenarios:
+- New users signing up with Google
+- Existing users logging in with Google
+- Linking Google accounts to existing email/password accounts
+- Updating user avatars when Google profile changes
+
