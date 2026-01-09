@@ -3,6 +3,9 @@ import connectDB from '../../../../lib/mongodb'
 import User from '../../../../models/User'
 import jwt from 'jsonwebtoken'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 const JWT_EXPIRE = process.env.JWT_EXPIRE || '7d'
 

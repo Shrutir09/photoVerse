@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import connectDB from '../../../../lib/mongodb'
 import User from '../../../../models/User'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 export async function POST(request) {
   try {
     // Parse request body with error handling

@@ -3,6 +3,9 @@ import connectDB from '../../../../lib/mongodb'
 import User from '../../../../models/User'
 import jwt from 'jsonwebtoken'
 
+// Force dynamic rendering (this route uses request headers)
+export const dynamic = 'force-dynamic'
+
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
 
 export async function GET(request) {

@@ -9,9 +9,10 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
   // Experimental features for better performance
-  experimental: {
-    optimizeCss: true,
-  },
+  // Note: optimizeCss requires 'critters' package, disabled for now
+  // experimental: {
+  //   optimizeCss: true,
+  // },
 }
 
 module.exports = nextConfig
