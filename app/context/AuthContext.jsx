@@ -149,8 +149,10 @@ export function AuthProvider({ children }) {
       }
 
       // Store token and user data
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+      }
       setUser(data.user)
 
       return { success: true, user: data.user }
@@ -195,8 +197,10 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setUser(null)
-    localStorage.removeItem('token')
-    localStorage.removeItem('user')
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+    }
     router.push('/login')
   }
 
