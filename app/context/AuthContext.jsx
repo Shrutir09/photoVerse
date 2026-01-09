@@ -195,6 +195,43 @@ export function AuthProvider({ children }) {
     }
   }
 
+  const googleLogin = async (credential) => {
+    try {
+      const response = await fetch(`${API_BASE}/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ credential }),
+      })
+
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        return { success: false, error: 'Server returned an invalid response. Please try again.' }
+      }
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Google authentication failed')
+      }
+
+      // Store token and user data
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
+      }
+      setUser(data.user)
+
+      return { success: true, user: data.user }
+    } catch (error) {
+      console.error('Google login error:', error)
+      return { success: false, error: error.message || 'Google authentication failed. Please try again.' }
+    }
+  }
+
   const logout = () => {
     setUser(null)
     if (typeof window !== 'undefined') {
@@ -208,6 +245,7 @@ export function AuthProvider({ children }) {
     user,
     login,
     signup,
+    googleLogin,
     logout,
     loading,
     isAuthenticated: !!user,

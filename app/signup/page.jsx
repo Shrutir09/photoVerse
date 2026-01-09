@@ -9,7 +9,7 @@ import Logo from '../components/Logo'
 
 export default function SignupPage() {
   const router = useRouter()
-  const { signup, isAuthenticated } = useAuth()
+  const { signup, googleLogin, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -86,10 +86,8 @@ export default function SignupPage() {
     }
   }
 
-<<<<<<< HEAD
-=======
   const handleGoogleSignIn = () => {
-    if (!window.google || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+    if (typeof window === 'undefined' || !window.google || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
       setError('Google Sign In is not configured. Please contact support.')
       return
     }
@@ -111,7 +109,6 @@ export default function SignupPage() {
     }
   }
 
->>>>>>> 2e5eb7d (WIP: local changes)
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:from-gray-900 dark:via-green-900 dark:to-emerald-900 relative overflow-hidden">
       {/* Animated Background Elements */}
