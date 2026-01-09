@@ -126,6 +126,7 @@ export default function LoginPage() {
   }
 
   const handleGoogleSignIn = () => {
+<<<<<<< Updated upstream
     if (!window.google || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
       setError('Google Sign In is not configured. Please contact support.')
       return
@@ -146,6 +147,14 @@ export default function LoginPage() {
       console.error('Error triggering Google Sign In:', error)
       setError('Failed to initiate Google Sign In. Please try again.')
     }
+=======
+    setError('Google sign-in is not yet implemented. Please use email and password to sign in.')
+    // TODO: Implement Google OAuth
+    // This will require:
+    // 1. Setting up Google OAuth credentials
+    // 2. Creating an API route for Google authentication
+    // 3. Handling the OAuth callback
+>>>>>>> Stashed changes
   }
 
   return (
