@@ -86,6 +86,32 @@ export default function SignupPage() {
     }
   }
 
+<<<<<<< HEAD
+=======
+  const handleGoogleSignIn = () => {
+    if (!window.google || !process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID) {
+      setError('Google Sign In is not configured. Please contact support.')
+      return
+    }
+
+    try {
+      window.google.accounts.id.prompt((notification) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // Fallback: trigger sign in manually
+          window.google.accounts.oauth2.initTokenClient({
+            client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse,
+            scope: 'email profile',
+          }).requestAccessToken()
+        }
+      })
+    } catch (error) {
+      console.error('Error triggering Google Sign In:', error)
+      setError('Failed to initiate Google Sign In. Please try again.')
+    }
+  }
+
+>>>>>>> 2e5eb7d (WIP: local changes)
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-green-50 via-emerald-50 to-cyan-50 dark:from-gray-900 dark:via-green-900 dark:to-emerald-900 relative overflow-hidden">
       {/* Animated Background Elements */}
