@@ -54,13 +54,41 @@ An AI-powered, interactive web platform that helps users understand photosynthes
 - 🎨 Glass-morphism design
 
 ## Tech Stack
+Frontend Framework & Library
+-Next.js 14 (App Router)
+-React 18
+-React DOM 18
 
-- **Next.js 14** (App Router)
-- **React 18**
-- **Tailwind CSS**
-- **Framer Motion** (animations)
-- **Recharts** (data visualization)
-- **OpenAI API** (AI tutor)
+Styling & UI
+-Tailwind CSS 3.3.5
+-PostCSS 8.4.31
+-Autoprefixer 10.4.16
+-Framer Motion 10.16.4 (animations)
+
+Data Visualization
+-Recharts 2.10.3
+
+Backend & Database
+-MongoDB (via Mongoose 9.1.2)
+-bcryptjs 3.0.3 (password hashing)
+-jsonwebtoken 9.0.3 (authentication)
+
+AI/ML
+-OpenAI API 4.20.0 (PhotoBot AI tutor)
+
+Development Tools
+-TypeScript 5.2.2
+-Node.js 18+ (runtime)
+-@types/node 20.0.0
+-@types/react 18.2.0
+-@types/react-dom 18.2.0
+
+Build & Performance
+-SWC Minify (via Next.js)
+-Image Optimization (AVIF & WebP formats)
+-CSS Optimization (experimental)
+
+
 
 ## Getting Started
 
